@@ -1,7 +1,9 @@
 ﻿namespace CreativeBlogsLibrary.Models;
 public class TagModel
 {
-    public string TagId { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; }
 
     public string TagName { get; set; }
 
