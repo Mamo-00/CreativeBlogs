@@ -14,7 +14,7 @@ public class BasicUserModel
 
     public BasicUserModel(UserModel user)
     {
-        this.Id = user.Id;
-        this.DisplayName = user.DisplayName;
+        Id = user.Id;
+        DisplayName = user.DisplayName;
     }
 }

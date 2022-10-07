@@ -14,6 +14,6 @@ public class UserModel
 
     public List<BlogPostModel> AuthoredPosts { get; set; } = new();
 
-    public List<BlogPostModel> BookmarkedPosts { get; set; } = new();
+    public List<BasicBlogPostModel> BookmarkedPosts { get; set; } = new();
 
 }
