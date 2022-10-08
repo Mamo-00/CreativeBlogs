@@ -95,7 +95,8 @@ public class MongoBlogPostData : IBlogPostData
 	{
 		var client = db.Client;
 
-		
+		//not using transaction because it is not working for some reason,
+		//but would've ideally used it if it worked :(
 		try
 		{
 			var db = client.GetDatabase(this.db.DbName);
@@ -113,7 +114,9 @@ public class MongoBlogPostData : IBlogPostData
 		}
 		catch (Exception ex)
 		{
-			
+			// TODO: use serilog to log exceptions
+			string exception = ex.Message;
+			Console.WriteLine(exception);
 			throw;
 		}
 	}
