@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
-using MongoDB.Driver;
+
 
 namespace CreativeBlogsLibrary.DataAccess;
 
@@ -24,8 +24,8 @@ public class DbConnection : IDbConnection
     public DbConnection(IConfiguration configuration)
     {
         this.configuration = configuration;
-        Client = new MongoClient(this.configuration.GetConnectionString(this.connectionId));
-        DbName = this.configuration["DataBaseName"];
+        Client = new MongoClient(this.configuration.GetConnectionString(connectionId));
+        DbName = this.configuration["DatabaseName"];
         this.db = Client.GetDatabase(DbName);
 
         TagCollection = this.db.GetCollection<TagModel>(TagCollectionName);

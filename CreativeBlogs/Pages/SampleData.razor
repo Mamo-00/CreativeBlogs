@@ -1,0 +1,116 @@
+﻿@page "/SampleData"
+@inject ITagsData tagsData
+@inject IUserData userData
+@inject IBlogPostData blogpostData
+
+
+
+<h3>SampleData</h3>
+
+
+@if (tagsIsCreated == true)
+{
+    <h4>Tags have been created</h4>
+}
+else
+{
+    <button class="btn btn-primary" @onclick="CreateTags">Create Tags</button>
+}
+
+<button class="btn btn-danger" @onclick="GenerateSampleData">Generate Sample Data</button>
+
+
+@code {
+    private bool tagsIsCreated = false;
+  
+
+    private async Task GenerateSampleData()
+    {
+        UserModel user = new()
+            {
+                DisplayName = "mamo_test",
+                EmailAddress = "mamo@test.com",
+                ObjectIdentifier = "63408785cb31c1c3ac14932f"
+            };
+        await userData.CreateUser(user);
+
+        var foundUser = await userData.GetUserFromAuthentication("63408785cb31c1c3ac14932f");
+        var tags = await tagsData.GetAllTags();
+
+        HashSet<string> bookmarks = new();
+        bookmarks.Add("1");
+        bookmarks.Add("2");
+        bookmarks.Add("3");
+
+        BlogPostModel blogPostModel = new()
+            {
+                Author = new BasicUserModel(foundUser),
+                Tag = tags[0],
+                Title = "First Post",
+                Bookmarks = bookmarks,
+                Description = "This is the first post ever on this website, although it is just a \nsample post created for testing. But it is still a fir post though"
+            };
+        await blogpostData.CreateBlogPost(blogPostModel);
+
+        blogPostModel = new()
+            {
+                Author = new BasicUserModel(foundUser),
+                Tag = tags[1],
+                Title = "Second Post",
+                Description = "This is the second post ever on this website, although it is just a " + 
+                              "\nsample post created for testing. Not as exciting as the first post though"
+            };
+        await blogpostData.CreateBlogPost(blogPostModel);
+
+        blogPostModel = new()
+            {
+                Author = new BasicUserModel(foundUser),
+                Tag = tags[2],
+                Title = "Third Post",
+                Description = "This is the third post ever on this website, although it is just a " +
+                              "\nsample post created for testing. At this point no one cares about the posts " + 
+                              "\n after the second post though. I mean it's just the third post out of many posts"
+            };
+        await blogpostData.CreateBlogPost(blogPostModel);
+        
+    }
+
+    private async Task CreateTags() 
+    {
+        var tags = await tagsData.GetAllTags();
+        if (tags?.Count > 0)
+        {
+            return;
+        }
+
+        TagModel tag = new()
+            {
+                TagName = "Travelling ",
+                TagDescription = "This tag is for posts that talk about travelling in general such as best places to travel etc."
+            };
+        await tagsData.CreateTags(tag);
+
+        tag = new()
+            {
+                TagName = "Science ",
+                TagDescription = "This tag is for posts that talk about scientific subjects or reports and etc."
+            };
+        await tagsData.CreateTags(tag);
+
+        tag = new()
+            {
+                TagName = "Literature ",
+                TagDescription = "This tag is for posts that talk about literature in general such as book recommendations or book rating etc."
+            };
+        await tagsData.CreateTags(tag);
+
+        tag = new()
+            {
+                TagName = "Philosophy ",
+                TagDescription = "This tag is for posts that talk about philosophy in general such as discussing a philosopher's work etc."
+            };
+        await tagsData.CreateTags(tag);
+
+        tagsIsCreated = true;
+    } 
+}

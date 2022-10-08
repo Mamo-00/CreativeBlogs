@@ -12,7 +12,7 @@ public class UserModel
 
     public string EmailAddress { get; set; }
 
-    public List<BlogPostModel> AuthoredPosts { get; set; } = new();
+    public List<BasicBlogPostModel> AuthoredPosts { get; set; } = new();
 
     public List<BasicBlogPostModel> BookmarkedPosts { get; set; } = new();
 

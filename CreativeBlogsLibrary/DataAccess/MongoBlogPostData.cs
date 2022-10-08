@@ -93,30 +93,27 @@ public class MongoBlogPostData : IBlogPostData
 
 	public async Task CreateBlogPost(BlogPostModel blogPost)
 	{
-		var client = this.db.Client;
+		var client = db.Client;
 
-		using var session = await client.StartSessionAsync();
-
-		session.StartTransaction();
-
+		
 		try
 		{
 			var db = client.GetDatabase(this.db.DbName);
 			var blogpostInTransaction = db.GetCollection<BlogPostModel>(this.db.BlogPostCollectionName);
 			await blogpostInTransaction.InsertOneAsync(blogPost);
 
-			var usersInTransation = db.GetCollection<UserModel>(this.db.UserCollectionName);
-			var user = await this.userData.GetUser(blogPost.Author.Id);
-			user.BookmarkedPosts.Add(new BasicBlogPostModel(blogPost));
-			await usersInTransation.ReplaceOneAsync(u => u.Id == user.Id, user);
+			var usersInTransaction = db.GetCollection<UserModel>(this.db.UserCollectionName);
+			var user = await userData.GetUser(blogPost.Author.Id);
+			user.AuthoredPosts.Add(new BasicBlogPostModel(blogPost));
+			await usersInTransaction.ReplaceOneAsync(u => u.Id == user.Id, user);
 
-			await session.CommitTransactionAsync();
+			
 
 			cache.Remove(CacheName);
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
-
+			
 			throw;
 		}
 	}
