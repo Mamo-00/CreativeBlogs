@@ -48,7 +48,7 @@ else
                 Tag = tags[0],
                 Title = "First Post",
                 Bookmarks = bookmarks,
-                Description = "This is the first post ever on this website, although it is just a \nsample post created for testing. But it is still a fir post though"
+                Description = "This is the first post ever on this website, although it is just a \nsample post created for testing. But it is still a first post though"
             };
         await blogpostData.CreateBlogPost(blogPostModel);
 
@@ -109,6 +109,7 @@ else
                 TagName = "Philosophy ",
                 TagDescription = "This tag is for posts that talk about philosophy in general such as discussing a philosopher's work etc."
             };
+
         await tagsData.CreateTags(tag);
 
         tagsIsCreated = true;
