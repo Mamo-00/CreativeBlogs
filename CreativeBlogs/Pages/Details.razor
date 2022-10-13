@@ -1,0 +1,114 @@
+﻿@page "/Details/{id}"
+
+@inject IBlogPostData blogpostData
+@inject NavigationManager navManager
+
+<div>
+    <div>
+        @if (blogpost is not null)
+        {
+            <div>
+                <div id="TopRow" class=" w-50 ms-5">
+                    <div id="FirstLayer" class="d-flex">
+                        <div class="float-start flex-grow-1">@blogpost.Author.DisplayName</div>
+                        <div id="bookmarks" class="d-flex justify-content-end">
+                            <div class="mx-2">@blogpost.Bookmarks.Count</div>
+                            <span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div id="SecondLayer" class="d-flex justify-content-start">
+                        <div class="me-3">@blogpost.DateCreated.ToString("MM.dd.yyyy")</div>
+                        <div class="me-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                                <circle cx="8" cy="8" r="8" />
+                            </svg>
+                        </div>
+                        <div>@ReadingTime(blogpost.Description)</div>
+                    </div>
+                </div>
+                <div id="content" class="ms-5">
+                    <div class="mt-2 fw-bold">@blogpost.Title</div>
+                    <div id="Description" class="w-50 h-75 my-2 lh-base">@blogpost.Description</div>
+                </div>
+                <div id="TagRow" class="border ms-5 m-2 w-50 d-flex justify-content-center">@blogpost.Tag.TagName</div>
+                <div id="buttons" class="d-flex w-50 justify-content-end ms-5">
+                    <button class="btn btn-dark mx-2 my-2" @onclick="ClosePage">Home</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private BlogPostModel blogpost;
+
+    protected async override Task OnInitializedAsync()
+    {
+        blogpost = await blogpostData.GetBlogPost(Id);
+    }
+
+
+    private string GetBookmarkText(BlogPostModel blogPost)
+    {
+        return blogPost.Bookmarks.Count.ToString("00");
+    }
+
+    private int GetWordCount(string text) 
+    {
+        int wordCount = 0;
+        int index = 0;
+        while (index < text.Length && char.IsWhiteSpace(text[index]))
+            index++;
+
+        while (index < text.Length)
+        {
+            // check if current char is part of a word
+            while (index < text.Length && !char.IsWhiteSpace(text[index]))
+                index++;
+
+            wordCount++;
+
+            // skip whitespace until next word
+            while (index < text.Length && char.IsWhiteSpace(text[index]))
+                index++;
+        }
+
+        return wordCount;
+    }
+
+    private string ReadingTime(string text) 
+    {
+        int wordCount = 0;
+        int timeToRead = 0;
+        string readingTime = "";
+
+        wordCount = GetWordCount(text);
+
+        timeToRead = wordCount / 225;
+
+        //TimeSpan time = TimeSpan.FromMinutes(timeToRead);
+        //string timeToString = time.ToString("mm");
+        if (timeToRead < 1)
+        {
+            readingTime = "less than 1 minute";
+        }
+        else
+        {
+            readingTime = timeToRead.ToString() + " minutes";
+        }
+
+        return readingTime;
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+}
