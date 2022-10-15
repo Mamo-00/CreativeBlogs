@@ -28,19 +28,19 @@
                         <label for="description" class="fw-bold fs-5"><h2>Description</h2></label>
                         <InputTextArea id="description" class="w-75" rows="25" @bind-Value="blogpost.Description"/>
                     </div>
-                    <div>
+                    <div class="container">
                         <MyInputRadioGroup id="tag" @bind-Value="blogpost.TagId">
                             @foreach (var t in tags)
                             {
-                                <div>
-                                    <InputRadio Value="@t.Id" id="@t.Id" />
-                                    <label for="@t.Id" title="@t.TagDescription">@t.TagName</label>
+                                <div class="mx-1 radio-item-group ">
+                                    <InputRadio Value="@t.Id" id="@t.Id"  />
+                                    <label for="@t.Id" title="@t.TagDescription" class="text-center">@t.TagName</label>
                                 </div>
                             }
                         </MyInputRadioGroup>
                     </div>
                    
-                    <div class="mx-auto mt-2 d-grid gap-2 d-md-flex justify-content-md-end overflow-auto flex-nowrap w-75 btn group">
+                    <div class="mx-auto mt-2 d-grid gap-2 d-md-flex justify-content-md-end flex-nowrap w-75 btn group">
                         <button class="btn btn-dark mx-2 my-2" @onclick="ClosePage">Cancel</button>
                         <button class="btn btn-light mx-2 my-2" type="submit">Publish</button>
                         

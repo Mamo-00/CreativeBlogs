@@ -20,16 +20,17 @@
         <button class="btn btn-dark" @onclick="() => OrderByNew(true)">Recent</button>
         <button class="btn btn-dark" @onclick="() => OrderByNew(false)">Top</button>
     </div>
-    <div  class="d-flex justify-content-evenly w-25 my-2 border-style mx-auto">  
+    <div class="container">
         @if (tags is not null)
         {
             @foreach (var t in tags)
             {
-                <div @onclick="(() => OnTagClick(t.TagName))" class="my-2">@t.TagName</div>
+                <div @onclick="(() => OnTagClick(t.TagName))" class="my-2 mx-2 btn radio-item-group">@t.TagName</div>
             }
+
         }
     </div>
-
+    
     <div>@blogposts?.Count Blog Posts</div>  @*TODO: remove this as i dont plan on showing this to users*@
 
     <div>
@@ -75,9 +76,7 @@
                 </Virtualize>
             }
         </div>
-        <div id="Right-of-vertical-ruler">
-
-    </div>
+        <div id="Right-of-vertical-ruler"></div>
 </div>
 
 

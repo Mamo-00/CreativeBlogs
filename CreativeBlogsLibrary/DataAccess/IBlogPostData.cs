@@ -6,5 +6,6 @@ public interface IBlogPostData
     Task CreateBlogPost(BlogPostModel blogPost);
     Task<List<BlogPostModel>> GetAllBlogPosts();
     Task<BlogPostModel> GetBlogPost(string id);
+    Task<List<BlogPostModel>> GetUsersBlogPosts(string userId);
     Task UpdateBlogPost(BlogPostModel blogPost);
 }

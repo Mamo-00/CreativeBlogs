@@ -30,6 +30,19 @@ public class MongoBlogPostData : IBlogPostData
 		return output;
 	}
 
+	public async Task<List<BlogPostModel>> GetUsersBlogPosts(string userId)
+	{
+		var output = cache.Get<List<BlogPostModel>>(userId);
+		if (output is null)
+		{
+			var results = await blogposts.FindAsync(b => b.Author.Id == userId);
+			output = results.ToList();
+
+			cache.Set(userId, output, TimeSpan.FromMinutes(1));
+		}
+		return output;
+	}
+
 	public async Task<BlogPostModel> GetBlogPost(string id)
 	{
 		var results = await blogposts.FindAsync(b => b.Id == id);

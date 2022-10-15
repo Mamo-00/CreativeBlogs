@@ -8,13 +8,12 @@
 <h3>SampleData</h3>
 
 
+
+
+<button class="btn btn-primary" @onclick="CreateTags">Create Tags</button>
 @if (tagsIsCreated == true)
 {
     <h4>Tags have been created</h4>
-}
-else
-{
-    <button class="btn btn-primary" @onclick="CreateTags">Create Tags</button>
 }
 
 <button class="btn btn-danger" @onclick="GenerateSampleData">Generate Sample Data</button>
@@ -78,37 +77,37 @@ else
     private async Task CreateTags() 
     {
         var tags = await tagsData.GetAllTags();
-        if (tags?.Count > 0)
+        if (tags?.Count > 8)
         {
             return;
         }
 
         TagModel tag = new()
             {
-                TagName = "Travelling ",
-                TagDescription = "This tag is for posts that talk about travelling in general such as best places to travel etc."
+                TagName = "Hobbies",
+                TagDescription = "This tag is for posts that talk about your hobbies in general such as ranking hobbies or talk about good or bad hobbies or explaining about your hobby"
             };
         await tagsData.CreateTags(tag);
 
         tag = new()
             {
-                TagName = "Science ",
-                TagDescription = "This tag is for posts that talk about scientific subjects or reports and etc."
+                TagName = "Fiction",
+                TagDescription = "This tag is for posts that talk about fiction in general such as books you have read or cartoons/anime/reality tv that you have watched and your recommendations etc."
             };
         await tagsData.CreateTags(tag);
 
-        tag = new()
-            {
-                TagName = "Literature ",
-                TagDescription = "This tag is for posts that talk about literature in general such as book recommendations or book rating etc."
-            };
-        await tagsData.CreateTags(tag);
+        //tag = new()
+        //    {
+        //        TagName = "Technology",
+        //        TagDescription = "This tag is for posts that talk about Technology in general such as what new technology came out or how to use a certain technology etc."
+        //    };
+        //await tagsData.CreateTags(tag);
 
-        tag = new()
-            {
-                TagName = "Philosophy ",
-                TagDescription = "This tag is for posts that talk about philosophy in general such as discussing a philosopher's work etc."
-            };
+        //tag = new()
+        //    {
+        //        TagName = "Politics",
+        //        TagDescription = "This tag is for posts that talk about politics in general such as discussing what politician is good or bad or good and bad policies etc."
+        //    };
 
         await tagsData.CreateTags(tag);
 
