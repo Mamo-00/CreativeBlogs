@@ -1,4 +1,6 @@
 ﻿@page "/Posts"
+@attribute [Authorize]
+@inject AuthenticationStateProvider authProvider
 @inject IBlogPostData blogpostData
 @inject IUserData userData
 @inject NavigationManager navManager
@@ -13,15 +15,15 @@
                         <h1 class="">Your Posts</h1>
                     </div>
                     <div></div>
-                    <div class="d-flex">
+                    <div class="d-flex gap-2">
                         <button class="btn btn-dark me-2 my-2 bs-bb custom-button" @onclick="CreatePage">Create</button>
-                        <div class="d-block mx-1"></div>
+                        
                         <button class="btn btn-dark me-2 my-2 bs-bb custom-button" @onclick="ClosePage">Home</button>
                     </div>
                 </div>
             </div>
             <div>
-                @if (submissions is not null)
+                @if (submissions?.Count > 0)
                 {
                     @foreach (var b in submissions)
                     {
@@ -60,7 +62,7 @@
             </div>
         </div>
     </main>
-    <div id="sidebar" class="r-side-width ms-4 vertical-l"></div>
+    <div id="sidebar" class="right-side-width ms-4 vertical-l"></div>
 </div>
 
 
@@ -71,8 +73,7 @@
 
     protected async override Task OnInitializedAsync()
     {
-        // TODO: replace with real user (this is test)
-        loggedInUser = await userData.GetUserFromAuthentication("63408785cb31c1c3ac14932f");
+        loggedInUser = await authProvider.GetUserFromAuth(userData);
 
         var results = await blogpostData.GetUsersBlogPosts(loggedInUser.Id);
 

@@ -1,5 +1,6 @@
 ﻿@page "/"
 @inject NavigationManager navManager
+@inject AuthenticationStateProvider authProvider
 @inject ITagsData tagData
 @inject IBlogPostData postData
 @inject IUserData userData
@@ -8,57 +9,41 @@
 <PageTitle>Creative Blogs</PageTitle>
 
 <link rel="shortcut icon" type="image/x-icon" href="./Images/" />
-<div class="border-style w-75">
-    <div class="border-style d-flex justify-content-md-evenly w-25 mb-2 mx-auto">
-        <button class="btn btn-dark float-end me-2" @onclick="SamplePage">Sample Data</button>
-        <button class="btn btn-dark float-start mx-2" @onclick="HomePage">Home</button>
-        <button class="btn btn-dark float-start mx-2" @onclick="CreatePage">Create</button>
-    </div>
-    
-
-    <div class="d-flex justify-content-evenly border-style w-25 py-2 mx-auto" >
-        <button class="btn btn-dark" @onclick="() => OrderByNew(true)">Recent</button>
-        <button class="btn btn-dark" @onclick="() => OrderByNew(false)">Top</button>
-    </div>
-    <div class="container">
-        @if (tags is not null)
-        {
-            @foreach (var t in tags)
+<div class="d-flex">
+    <div class="left-side-width float-start me-4 vertical-r"></div>
+    <main class="main-width mt-lg-4 mx-lg-4">
+        <div class="d-flex justify-content-evenly border-style w-25 py-2 mx-auto">
+            <button class="btn btn-dark" @onclick="() => OrderByNew(true)">Recent</button>
+            <button class="btn btn-dark" @onclick="() => OrderByNew(false)">Top</button>
+        </div>
+        <div class="container">
+            @if (tags?.Count > 0)
             {
-                <div @onclick="(() => OnTagClick(t.TagName))" class="my-2 mx-2 btn radio-item-group">@t.TagName</div>
+                @foreach (var t in tags)
+                {
+                    <div @onclick="(() => OnTagClick(t.TagName))" class="my-2 mx-2 btn radio-item-group">@t.TagName</div>
+                }
+
             }
-
-        }
-    </div>
-    
-    <div>@blogposts?.Count Blog Posts</div>  @*TODO: remove this as i dont plan on showing this to users*@
-
-    <div>
-        <input type="text"
-               class="searchbox rounded-2"
-               placeholder="Search"
-               @bind-value="@this.InputValue"
-               @bind-value:event="oninput"
-               @onkeydown="@OnSearchInput"/>
-    </div>
-
+        </div>
 
         <div id="blog-post-section">
             @if (blogposts is not null)
             {
                 <Virtualize Items="@blogposts" Context="b" OverscanCount="10">
-                    <div id="TheBigContainer" class="w-50 mt-4" @onclick="(() => OpenDetails(b))">
+                    <div id="TheBigContainer" class="w-50 mt-4 overflow-auto" @onclick="(() => OpenDetails(b))">
                         <div id="TopRowOfContainer" class="d-flex justify-content-start">
                             <div class="me-2">@b?.Author.DisplayName</div>
                             <div>@b?.DateCreated.ToString("MM.dd.yyyy")</div>
-                            <span class="ms-auto me-2">
+                            <span class="ms-auto me-2 d-flex gap-1 align-items-center" @onclick="() => Bookmark(b)">
+                                <div>@GetBookmarkText(b)</div>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
                                     <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
                                 </svg>
                             </span>
                         </div>
                         <div id="MiddleContent">
-                            <div id="Header" >@b.Title</div>
+                            <div id="Header">@b.Title</div>
                             <div id="Description">@GetSubstringDescription(b.Description)</div>
                         </div>
                         <div id="BottomContent" class="d-flex justify-content-lg-start">
@@ -76,25 +61,88 @@
                 </Virtualize>
             }
         </div>
-        <div id="Right-of-vertical-ruler"></div>
+        
+    </main>
+    <div id="right-vr" class="right-side-width ms-4 vertical-l d-flex flex-column">
+        <div>
+            <input type="text"
+                   class="searchbox rounded-pill border-0"
+                   placeholder="Search"
+                   @bind-value="@this.InputValue"
+                   @bind-value:event="oninput"
+                   @onkeydown="@OnSearchInput" />
+        </div>
+        <div class="sidebar">
+            <button class="btn btn-dark me-2 my-2 bs-bb custom-button" @onclick="CreatePage">Create</button>
+            <button class="btn btn-dark me-2 my-2 bs-bb custom-button" @onclick="CreatePage">Create</button>
+            <button class="btn btn-dark me-2 my-2 bs-bb custom-button" @onclick="CreatePage">Create</button>
+            <button class="btn btn-dark me-2 my-2 bs-bb custom-button" @onclick="CreatePage">Create</button>
+        </div>
+    </div>
+    
 </div>
 
 
 
 
 
+
 @code {
+    private UserModel loggedInUser;
     private List<BlogPostModel> blogposts;
     private List<TagModel> tags;
     public string InputValue { get; private set; }
 
-    private string selectedTag = "";
+    private string selectedTag = "All";
     private string searchText = "";
     bool isSortedByNew = true;
 
     protected async override Task OnInitializedAsync() 
     {
         tags = await tagData.GetAllTags();
+        await LoadAndVerifyUser();
+    }
+
+    private async Task LoadAndVerifyUser() 
+    {
+        var authState = await authProvider.GetAuthenticationStateAsync();
+        string objectId = authState.User.Claims.FirstOrDefault(c => c.Type.Contains("objectidentifier"))?.Value;
+        if (string.IsNullOrWhiteSpace(objectId) == false)
+        {
+            loggedInUser = await userData.GetUserFromAuthentication(objectId) ?? new();
+
+            string displayName = authState.User.Claims.FirstOrDefault(c => c.Type.Equals("name"))?.Value;
+            string email = authState.User.Claims.FirstOrDefault(c => c.Type.Contains("email"))?.Value;
+
+            //if user does not exist, data is not dirty and user will be added to database
+            bool isDirty = false;
+            if (objectId.Equals(loggedInUser.ObjectIdentifier) == false)
+            {
+                isDirty = true;
+                loggedInUser.ObjectIdentifier = objectId;
+            }
+            if (displayName.Equals(loggedInUser.DisplayName) == false)
+            {
+                isDirty = true;
+                loggedInUser.DisplayName = displayName;
+            }
+            if (email.Equals(loggedInUser.EmailAddress) == false)
+            {
+                isDirty = true;
+                loggedInUser.EmailAddress = email;
+            }
+            if (isDirty)
+            {
+                if (string.IsNullOrWhiteSpace(loggedInUser.Id))
+                {
+                    await userData.CreateUser(loggedInUser);
+                }
+                else
+                {
+                    await userData.UpdateUser(loggedInUser);
+                }
+            }
+        }
     }
 
     protected async override Task OnAfterRenderAsync(bool firstRender) 
@@ -110,7 +158,7 @@
     private async Task LoadFilterState() 
     {
         var stringResults = await sessionStorage.GetAsync<string>(nameof(selectedTag));
-        selectedTag = stringResults.Success ? stringResults.Value : "";
+        selectedTag = stringResults.Success ? stringResults.Value : "All";
 
         stringResults = await sessionStorage.GetAsync<string>(nameof(searchText));
         searchText = stringResults.Success ? stringResults.Value : "";
@@ -132,9 +180,13 @@
     {
         var output = await postData.GetAllBlogPosts();
 
-        if (selectedTag != "")
+        if (selectedTag != "All")
         {
             output = output.Where(b => b.Tag?.TagName == selectedTag).ToList();
+        }
+        else
+        {
+            output.ToList();
         }
 
         if (string.IsNullOrWhiteSpace(searchText) == false)
@@ -177,9 +229,9 @@
 
     private string GetSubstringDescription(string description) 
     {
-        if (description.Length > 100)
+        if (description.Length > 120)
         {
-            return description = description.Substring(0, 100);
+            return description = description.Substring(0, 120) + "...";
         }
         else
         {
@@ -203,13 +255,15 @@
             await FilterBlogPosts();
         }
     }
-    
 
-    
 
-    private async Task OnTagClick(string tag = "") 
+
+
+    private async Task OnTagClick(string tag = "All") 
     {
+
         selectedTag = tag;
+
         await FilterBlogPosts();
     }
 
@@ -221,6 +275,32 @@
     private void OpenDetails(BlogPostModel blogPost) 
     {
         navManager.NavigateTo($"/Details/{blogPost.Id}");
+    }
+
+    private async Task Bookmark(BlogPostModel blogpost) 
+    {
+        if (loggedInUser is not null)
+        {
+            if (blogpost.Author.Id == loggedInUser.Id)
+            {
+                //can't bookmark your own post
+                return;
+            }
+            if (blogpost.Bookmarks.Add(loggedInUser.Id) == false)
+            {
+                blogpost.Bookmarks.Remove(loggedInUser.Id);
+            }
+            await postData.BookmarkBlogPost(blogpost.Id, loggedInUser.Id);
+            if (isSortedByNew == false)
+            {
+                blogposts = blogposts.OrderByDescending(b => b.Bookmarks.Count)
+                            .ThenByDescending(b => b.DateCreated).ToList();
+            }
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
     }
 }
 

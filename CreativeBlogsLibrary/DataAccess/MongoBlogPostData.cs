@@ -74,7 +74,7 @@ public class MongoBlogPostData : IBlogPostData
 				blogpost.Bookmarks.Remove(userId);
 			}
 
-			await blogpostInTransaction.ReplaceOneAsync(b => b.Id == blogpostId, blogpost);
+			await blogpostInTransaction.ReplaceOneAsync(session, b => b.Id == blogpostId, blogpost);
 
 			var usersInTransation = db.GetCollection<UserModel>(this.db.UserCollectionName);
 			var user = await this.userData.GetUser(blogpost.Author.Id);
@@ -88,7 +88,7 @@ public class MongoBlogPostData : IBlogPostData
 				var suggestionToRemove = user.BookmarkedPosts.Where(b => b.Id == blogpostId).First();
 				user.BookmarkedPosts.Remove(suggestionToRemove);
 			}
-			await usersInTransation.ReplaceOneAsync(u => u.Id == userId, user);
+			await usersInTransation.ReplaceOneAsync(session, u => u.Id == userId, user);
 
 			await session.CommitTransactionAsync();
 
@@ -107,21 +107,20 @@ public class MongoBlogPostData : IBlogPostData
 	public async Task CreateBlogPost(BlogPostModel blogPost)
 	{
 		var client = db.Client;
-
+		using var session = await client.StartSessionAsync();
+		session.StartTransaction();
 		//not using transaction because it is not working for some reason,
 		//but would've ideally used it if it worked :(
 		try
 		{
 			var db = client.GetDatabase(this.db.DbName);
 			var blogpostInTransaction = db.GetCollection<BlogPostModel>(this.db.BlogPostCollectionName);
-			await blogpostInTransaction.InsertOneAsync(blogPost);
+			await blogpostInTransaction.InsertOneAsync(session, blogPost);
 
 			var usersInTransaction = db.GetCollection<UserModel>(this.db.UserCollectionName);
 			var user = await userData.GetUser(blogPost.Author.Id);
 			user.AuthoredPosts.Add(new BasicBlogPostModel(blogPost));
-			await usersInTransaction.ReplaceOneAsync(u => u.Id == user.Id, user);
-
-			
+			await usersInTransaction.ReplaceOneAsync(session, u => u.Id == user.Id, user);
 
 			cache.Remove(CacheName);
 		}
@@ -130,6 +129,7 @@ public class MongoBlogPostData : IBlogPostData
 			// TODO: use serilog to log exceptions
 			string exception = ex.Message;
 			Console.WriteLine(exception);
+			await session.AbortTransactionAsync();
 			throw;
 		}
 	}
