@@ -58,9 +58,7 @@ public class MongoBlogPostData : IBlogPostData
 	public async Task BookmarkBlogPost(string blogpostId, string userId)
 	{
 		var client = db.Client;
-		using var session = await client.StartSessionAsync();
-
-		session.StartTransaction();
+		
 
 		try
 		{
@@ -74,10 +72,10 @@ public class MongoBlogPostData : IBlogPostData
 				blogpost.Bookmarks.Remove(userId);
 			}
 
-			await blogpostInTransaction.ReplaceOneAsync(session, b => b.Id == blogpostId, blogpost);
+			await blogpostInTransaction.ReplaceOneAsync(b => b.Id == blogpostId, blogpost);
 
 			var usersInTransation = db.GetCollection<UserModel>(this.db.UserCollectionName);
-			var user = await this.userData.GetUser(blogpost.Author.Id);
+			var user = await this.userData.GetUser(userId);
 
 			if (isBookmarked)
 			{
@@ -88,39 +86,39 @@ public class MongoBlogPostData : IBlogPostData
 				var suggestionToRemove = user.BookmarkedPosts.Where(b => b.Id == blogpostId).First();
 				user.BookmarkedPosts.Remove(suggestionToRemove);
 			}
-			await usersInTransation.ReplaceOneAsync(session, u => u.Id == userId, user);
+			await usersInTransation.ReplaceOneAsync(u => u.Id == userId, user);
 
-			await session.CommitTransactionAsync();
-
+			
 			cache.Remove(CacheName);
 
 			//removing cache everytime can be ineffiecient if a lot of bookmarking is happening,
 			//therefore I might try to find a better method for bookmarking
 		}
-		catch (Exception)
+		catch (Exception ex)
 		{
-			await session.AbortTransactionAsync();
-			throw;
-		}
+            // TODO: use serilog to log exceptions
+            string exception = ex.Message;
+            Console.WriteLine(exception);
+            throw;
+        }
 	}
 
 	public async Task CreateBlogPost(BlogPostModel blogPost)
 	{
 		var client = db.Client;
-		using var session = await client.StartSessionAsync();
-		session.StartTransaction();
-		//not using transaction because it is not working for some reason,
+		
+		//not using transaction because it is not working because my mongodb cluster is standalone,
 		//but would've ideally used it if it worked :(
 		try
 		{
 			var db = client.GetDatabase(this.db.DbName);
 			var blogpostInTransaction = db.GetCollection<BlogPostModel>(this.db.BlogPostCollectionName);
-			await blogpostInTransaction.InsertOneAsync(session, blogPost);
+			await blogpostInTransaction.InsertOneAsync(blogPost);
 
 			var usersInTransaction = db.GetCollection<UserModel>(this.db.UserCollectionName);
 			var user = await userData.GetUser(blogPost.Author.Id);
 			user.AuthoredPosts.Add(new BasicBlogPostModel(blogPost));
-			await usersInTransaction.ReplaceOneAsync(session, u => u.Id == user.Id, user);
+			await usersInTransaction.ReplaceOneAsync(u => u.Id == user.Id, user);
 
 			cache.Remove(CacheName);
 		}
@@ -129,7 +127,6 @@ public class MongoBlogPostData : IBlogPostData
 			// TODO: use serilog to log exceptions
 			string exception = ex.Message;
 			Console.WriteLine(exception);
-			await session.AbortTransactionAsync();
 			throw;
 		}
 	}
