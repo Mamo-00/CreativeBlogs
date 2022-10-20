@@ -223,7 +223,7 @@
         if (isSortedByNew)
         {
             output = output.OrderByDescending(b => b.DateCreated).ToList();
-            isSortedByOld = false;
+           
         }
         else
         {
@@ -232,7 +232,7 @@
                             .ThenByDescending(b => b.DateCreated).ToList();
         }
         // TODO: fix the logic - this shit aint it lil bro
-        if (isSortedByOld == true)
+        if (isSortedByOld == true && isSortedByNew == false)
         {
             output = output.OrderBy(b => b.DateCreated).ToList();
         }
