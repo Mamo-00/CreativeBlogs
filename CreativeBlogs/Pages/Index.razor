@@ -10,44 +10,51 @@
 
 <link rel="shortcut icon" type="image/x-icon" href="./Images/" />
 <div class="d-flex">
-    <div class="left-side-width float-start me-4 vertical-r"></div>
-    <main class="main-width mt-lg-4 mx-lg-4">
-        <div class="d-flex justify-content-evenly border-style w-50 py-2 mx-auto">
+    <div class="left-side-width float-start vertical-r"></div>
+    <main class="main-width mt-4 mx-4 border-posts-blue">
+
+        <div class="d-flex justify-content-evenly  w-50 py-2 mx-auto border-style">
             <button class="btn me-2 mx-auto my-2 custom-button" @onclick="() => OrderByNew(true)"><span>Recent</span></button>
             <button class="btn me-2 mx-auto my-2 custom-button" @onclick="() => OrderByNew(false)"><span>Top</span></button>
+            <button class="btn me-2 mx-auto my-2 custom-button" @onclick="() => OrderByOld(false)"><span>Hot</span></button>
+            <button class="btn me-2 mx-auto my-2 custom-button" @onclick="() => OrderByOld(true)"><span>Old</span></button>
         </div>
-        <div class="container">
+
+        <div class="container border border-success">
             @if (tags?.Count > 0)
             {
                 @foreach (var t in tags)
                 {
-                    <div @onclick="(() =>  OnTagPerform(t.TagName))" class=" @TagFocus my-2 mx-2 btn radio-item-group">@t.TagName</div>
-            }
+                    <div type="button" id="@t.TagName" @onclick="(() =>  OnTagClick(t.TagName))" class=" @OnTagFocus(t.TagName) my-2 mx-2 btn radio-item-group">@t.TagName</div>
+                }
 
             }
         </div>
 
-        <div id="blog-post-section">
+        <div id="blog-post-section" class="border-posts-yellow">
             @if (blogposts is not null)
             {
                 <Virtualize Items="@blogposts" Context="b" OverscanCount="10">
-                    <div id="TheBigContainer" class="w-50 mt-4 overflow-auto" >
+                    <div id="TheBigContainer" class="w-50 mt-4 overflow-auto border-posts-red">
                         <div id="TopRowOfContainer" class="d-flex justify-content-start">
                             <div class="me-2">@b?.Author.DisplayName</div>
                             <div>@b?.DateCreated.ToString("MM.dd.yyyy")</div>
                             <span class="ms-auto me-2 d-flex gap-1 align-items-center" @onclick="() => Bookmark(b)">
                                 <div>@GetBookmarkText(b)</div>
+                                @if (loggedInUser is not null)
+                                {
+                                    @if (b.Author.Id != loggedInUser.Id)
+                                    {
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+                                        </svg>
+                                    }
+                                    else
+                                    {
+                                        <div id="empty"></div>
+                                    }
+                                }
                                 
-                                @if (b.Author.Id != loggedInUser.Id)
-                                {
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
-                                    </svg>
-                                }
-                                else
-                                {
-                                    <div id="empty"></div>
-                                }
                             </span>
                         </div>
                         <div id="MiddleContent" @onclick="(() => OpenDetails(b))">
@@ -71,20 +78,21 @@
         </div>
         
     </main>
-    <div id="right-vr" class="right-side-width ms-4 vertical-l d-flex flex-column">
-        <div>
+    <div id="right-vr" class="right-side-width vertical-l ">
+        <div class="searchbox row">
             <input type="text"
-                   class="searchbox rounded-pill border-0 "
+                   class="form-control rounded-control "
                    placeholder="Search"
                    @bind-value="@this.InputValue"
                    @bind-value:event="oninput"
                    @onkeydown="@OnSearchInput" />
         </div>
-        <div class="sidebar">
-            <button class="btn me-2 mx-auto my-2 custom-button" @onclick="HomePage"><span>Home</span></button>
-            <button class="btn me-2 mx-auto my-2 custom-button" @onclick="CreatePage"><span>Create</span></button>
-            <button class="btn me-2 mx-auto my-2 custom-button" @onclick="YourPostsPage"><span>Your Posts</span></button>
-            <button class="btn me-2 mx-auto my-2 custom-button" @onclick="CreatePage"><span>Write</span></button>
+        <div class="sidebar row row-cols-1 mt-5 position-fixed">
+            <button class="btn col mx-auto my-auto custom-button" @onclick="HomePage"><span>Home</span></button>
+            <button class="btn col mx-auto my-auto custom-button" @onclick="CreatePage"><span>Create</span></button>
+            <button class="btn col mx-auto my-auto custom-button" @onclick="YourPostsPage"><span>Your Posts</span></button>
+            <button class="btn col mx-auto my-auto custom-button" @onclick="HomePage"><span>Bookmarks</span></button> @* TODO: add Bookmarks page*@
+            <button class="btn col mx-auto my-auto custom-button" @onclick="CreatePage"><span>Write</span></button>
         </div>
     </div>
     
@@ -105,6 +113,7 @@
     private string selectedTag = "All";
     private string searchText = "";
     bool isSortedByNew = true;
+    bool isSortedByOld = true;
 
     protected async override Task OnInitializedAsync() 
     {
@@ -174,6 +183,9 @@
 
         var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByNew));
         isSortedByNew = boolResults.Success ? boolResults.Value : true;
+
+        var boolResultsOld = await sessionStorage.GetAsync<bool>(nameof(isSortedByOld));
+        isSortedByOld = boolResultsOld.Success ? boolResultsOld.Value : true;
     }
 
 
@@ -183,6 +195,7 @@
         await sessionStorage.SetAsync(nameof(selectedTag), selectedTag);
         await sessionStorage.SetAsync(nameof(searchText), searchText);
         await sessionStorage.SetAsync(nameof(isSortedByNew), isSortedByNew);
+        await sessionStorage.SetAsync(nameof(isSortedByOld), isSortedByOld);
     }
 
     private async Task FilterBlogPosts() 
@@ -210,11 +223,23 @@
         if (isSortedByNew)
         {
             output = output.OrderByDescending(b => b.DateCreated).ToList();
+            isSortedByOld = false;
         }
         else
         {
+            //Popular all time
             output = output.OrderByDescending(b => b.Bookmarks.Count)
                             .ThenByDescending(b => b.DateCreated).ToList();
+        }
+        // TODO: fix the logic - this shit aint it lil bro
+        if (isSortedByOld == true)
+        {
+            output = output.OrderBy(b => b.DateCreated).ToList();
+        }
+        else if(isSortedByOld == false && isSortedByNew == false)
+        {
+            //Popular of the week
+            output = output.OrderByDescending(b => b.Bookmarks.Count).ThenByDescending(b => b.DateCreated.AddDays(-7)).ToList();
         }
 
         blogposts = output;
@@ -233,12 +258,27 @@
 
     private void CreatePage() 
     {
-        navManager.NavigateTo("/Create");
+        if (loggedInUser is not null)
+        {
+            navManager.NavigateTo("/Create");
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
     }
 
     private void YourPostsPage()
     {
-        navManager.NavigateTo("/Posts");
+        if (loggedInUser is not null)
+        {
+            navManager.NavigateTo("/Posts");
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+
     }
 
     private string GetSubstringDescription(string description) 
@@ -258,6 +298,12 @@
         await FilterBlogPosts();
     }
 
+    private async Task OrderByOld(bool isOld) 
+    {
+        isSortedByOld = isOld;
+        await FilterBlogPosts();
+    }
+
 
     private async void OnSearchInput(KeyboardEventArgs e)
     {
@@ -270,19 +316,18 @@
         }
     }
 
-    private void OnTagFocus() 
+    private string OnTagFocus(string tag = "All")
     {
 
-        if (TagFocus == "tag-focus")
-        {
-            TagFocus = "";
+        if (tag == selectedTag)
+        { 
+            return TagFocus = "tag-focus";
         }
         else
         {
-            TagFocus = "tag-focus";
+            return "";
         }
     }
-
 
     private async Task OnTagClick(string tag = "All") 
     {
@@ -290,12 +335,6 @@
         selectedTag = tag;
 
         await FilterBlogPosts();
-    }
-
-    private async Task OnTagPerform(string tag = "All") 
-    {
-        OnTagFocus();
-        await OnTagClick(tag);
     }
 
     private string GetBookmarkText(BlogPostModel blogPost) 
@@ -326,6 +365,11 @@
             {
                 blogposts = blogposts.OrderByDescending(b => b.Bookmarks.Count)
                             .ThenByDescending(b => b.DateCreated).ToList();
+            }
+            if (isSortedByOld == false)
+            {
+                blogposts = blogposts.OrderByDescending(b => b.Bookmarks.Count)
+                           .ThenByDescending(b => b.DateCreated.AddDays(-7)).ToList();
             }
         }
         else
