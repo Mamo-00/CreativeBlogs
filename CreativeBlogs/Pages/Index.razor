@@ -32,10 +32,10 @@
 </div>
 
 <div class="row">
-    <main class="col-md-8 col-xl-9 mt-2 border-posts-blue">
+    <main class="col-md-8 col-xl-9 mt-2 ">
 
 
-        <div class=" d-flex border border-success overflow-auto">
+        <div class="container ">
             @if (tags?.Count > 0)
             {
                 @foreach (var t in tags)
@@ -46,11 +46,11 @@
             }
         </div>
 
-        <div id="blog-post-section" class="border-posts-yellow">
+        <div id="blog-post-section" class="">
             @if (blogposts is not null)
             {
                 <Virtualize Items="@blogposts" Context="b" OverscanCount="10">
-                    <div id="TheBigContainer" class="w-50 mt-4 overflow-auto border-posts-red">
+                    <div id="TheBigContainer" class="w-50 mt-4 overflow-auto ">
                         <div id="TopRowOfContainer" class="d-flex justify-content-start">
                             <div class="me-2">@b?.Author.DisplayName</div>
                             <div>@b?.DateCreated.ToString("MM.dd.yyyy")</div>
