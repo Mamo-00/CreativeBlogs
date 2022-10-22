@@ -133,12 +133,12 @@ a, .btn-link {
     box-sizing: border-box;
     color: #A64B2A;
     display: block;
-    height: 6vh;
+    height: 2.5rem;
     padding: 4px;
     position: relative;
     text-decoration: none;
     text-transform: uppercase;
-    width: 12vw;
+    width: 150px;
     z-index: 2;
 }
 
@@ -244,6 +244,10 @@ border: 2px solid blue;
     border: 2px solid yellow;
 }
 
+.border-posts-black {
+    border: 2px solid black;
+}
+
 .radio-item-group: {
     margin: 0.5rem;
 }
@@ -263,11 +267,11 @@ border: 2px solid blue;
     
     border: 2px #A64B2A solid;
     border-radius: 50px;
-    height: 50%;
-    padding: 0;
+    height: auto;
+    padding: 1rem;
     list-style: none;
     
-    margin: 0 2rem 0 2rem;
+    margin: 1rem;
 }
 @media only screen and (max-width: 710px) {
     .container {
