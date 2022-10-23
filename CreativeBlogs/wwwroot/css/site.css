@@ -47,6 +47,8 @@ a, .btn-link {
     border-radius: 10px;
 }
 
+
+
 .searhbox:focus {
     border: none;
 }
@@ -112,11 +114,11 @@ a, .btn-link {
 }
 
 .left-side-width {
-    width: 10%;
+    width: 1px;
 }
 
 .right-side-width {
-    width: 25vw;
+    width: 1px;
 }
 
 .main-width {
@@ -134,7 +136,7 @@ a, .btn-link {
     color: #A64B2A;
     display: block;
     height: 2.5rem;
-    padding: 4px;
+    padding: 2px;
     position: relative;
     text-decoration: none;
     text-transform: uppercase;
@@ -253,7 +255,7 @@ border: 2px solid blue;
 }
 
 
-.container {
+.container-tags {
     display: grid;
     gap: 2rem;
     grid-auto-flow: column;
@@ -271,10 +273,12 @@ border: 2px solid blue;
     padding: 1rem;
     list-style: none;
     
-    margin: 1rem;
+    margin: 2rem 1rem 1rem 2rem;
+    
+
 }
 @media only screen and (max-width: 710px) {
-    .container {
+    .container-tags {
         display: grid;
         gap: 2rem;
         grid-auto-flow: column;
@@ -285,7 +289,7 @@ border: 2px solid blue;
 }
 
 @media only screen and (max-width: 480px) {
-    .container {
+    .container-tags {
         display: grid;
         gap: 2rem;
         grid-auto-flow: column;
@@ -295,7 +299,7 @@ border: 2px solid blue;
 }
 
 @media only screen and (max-width: 320px) {
-    .container {
+    .container-tags {
         display: grid;
         gap: 2rem;
         grid-auto-flow: column;
@@ -308,7 +312,7 @@ border: 2px solid blue;
 }
 
 @media only screen and (min-width: 710px) {
-    .container {
+    .container-tags {
         display: grid;
         gap: 2rem;
         grid-auto-flow: column;

@@ -13,15 +13,15 @@
 
 @*<div class="left-side-width float-start vertical-r"></div>*@
 
-<div class="row d-flex">
-    <div class="col-md-8  d-flex justify-content-evenly my-auto py-2  border-style ">
+<div class="row ">
+    <div class="col-md-8  d-flex justify-content-evenly my-2 py-2  border-style ">
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByRecent()"><span>RECENT</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByTop()"><span>TOP</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByHot()"><span>HOT</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByOld()"><span>OLD</span></button>
     </div>
-    
-    <div class="searchbox  col-md-4  my-auto flex-shrink-1">
+    <div class="col-md-1"></div>
+    <div class="searchbox col-md-3 my-2 ">
         <input type="text"
                 class="form-control rounded-control "
                 placeholder="Search"
@@ -32,25 +32,25 @@
 </div>
 
 <div class="row">
-    <main class="col-md-8 col-xl-9 mt-2 ">
+    <main class="col-md-8 col-xl-9 mt-2 ps-0">
 
 
-        <div class="container ">
+        <div class="container-tags ">
             @if (tags?.Count > 0)
             {
                 @foreach (var t in tags)
                 {
-                    <div type="button" id="@t.TagName" @onclick="(() =>  OnTagClick(t.TagName))" class=" @OnTagFocus(t.TagName) my-2 mx-2 btn radio-item-group">@t.TagName</div>
+                    <div type="button" id="@t.TagName" @onclick="(() =>  OnTagClick(t.TagName))" class=" @OnTagFocus(t.TagName) my-2 btn radio-item-group">@t.TagName</div>
                 }
 
             }
         </div>
 
-        <div id="blog-post-section" class="">
+        <div id="blog-post-section" >
             @if (blogposts is not null)
             {
                 <Virtualize Items="@blogposts" Context="b" OverscanCount="10">
-                    <div id="TheBigContainer" class="w-50 mt-4 overflow-auto ">
+                    <div id="TheBigContainer" class=" my-5 overflow-auto ">
                         <div id="TopRowOfContainer" class="d-flex justify-content-start">
                             <div class="me-2">@b?.Author.DisplayName</div>
                             <div>@b?.DateCreated.ToString("MM.dd.yyyy")</div>
@@ -73,7 +73,7 @@
                             </span>
                         </div>
                         <div id="MiddleContent" @onclick="(() => OpenDetails(b))">
-                            <div id="Header">@b.Title</div>
+                            <div id="Header" class="fw-bold">@b.Title</div>
                             <div id="Description">@GetSubstringDescription(b.Description)</div>
                         </div>
                         <div id="BottomContent" class="d-flex justify-content-lg-start">
@@ -98,7 +98,6 @@
     <div class="col-md-4 col-xl-3 d-none d-md-block">
         <div class="sidebar row ">
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Home</span></button>
-            <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span >Create</span></button>
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span >Your Posts</span></button>
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Bookmarks</span></button> @* TODO: add Bookmarks page*@
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span >Write</span></button>
@@ -321,9 +320,9 @@
 
     private string GetSubstringDescription(string description) 
     {
-        if (description.Length > 120)
+        if (description.Length > 200)
         {
-            return description = description.Substring(0, 120) + "...";
+            return description = description.Substring(0, 200).TrimEnd() + "...";
         }
         else
         {

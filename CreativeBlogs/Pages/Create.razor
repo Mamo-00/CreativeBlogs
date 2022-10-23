@@ -28,16 +28,16 @@
 
                     <div class="d-flex flex-column my-3 align-items-center">
                         <label for="description" class="fw-bold fs-5"><h2>Description</h2></label>
-                        <InputTextArea id="description" class="w-75" rows="25" @bind-Value="blogpost.Description"/>
+                        <InputTextArea id="description" class="w-100" rows="25" @bind-Value="blogpost.Description"/>
                     </div>
-                    <div class="container">
+                    <div class="container-tags">
                         <MyInputRadioGroup id="tag" @bind-Value="blogpost.TagId">
                             @foreach (var t in tags)
                             {
                                 
                                 if(t.TagName != "All")
                                 {
-                                    <div tabindex="0" class="mx-1 radio-item-group ">
+                                    <div tabindex="0" class="mx-1 radio-item-group mb-2">
                                         <InputRadio Value="@t.Id" id="@t.Id" />
                                         <label for="@t.Id" title="@t.TagDescription" class="text-center">@t.TagName</label>
                                     </div>
