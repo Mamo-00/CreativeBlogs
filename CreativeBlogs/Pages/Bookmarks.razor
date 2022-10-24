@@ -1,4 +1,4 @@
-﻿@page "/Posts"
+﻿@page "/Bookmarks"
 @attribute [Authorize]
 @inject AuthenticationStateProvider authProvider
 @inject IBlogPostData blogpostData
@@ -12,7 +12,7 @@
             <div class="mx-auto">
                 <div class="align-items-center">
                     <div class="d-block  mx-auto">
-                        <h1 class="mx-auto">Your Posts</h1>
+                        <h1 class="mx-auto">Your Bookmarks</h1>
                     </div>
                 </div>
             </div>
@@ -21,8 +21,8 @@
                 {
                     @foreach (var b in submissions)
                     {
-                        <div id="TheBigContainer" class=" my-5 overflow-auto" >
-                            <hr/>
+                        <div id="TheBigContainer" class=" my-5 overflow-auto">
+                            <hr />
                             <div id="TopRowOfContainer" class="d-flex justify-content-start">
                                 <div class="me-2">@b?.Author.DisplayName</div>
                                 <div>@b?.DateCreated.ToString("MM.dd.yyyy")</div>
@@ -30,12 +30,12 @@
                             </div>
                             <hr />
                             <div id="MiddleContent" @onclick="(() => OpenDetails(b))">
-                                
+
                                 <div id="Header" class="font-style text-break">@b.Title</div>
                                 <div id="Description" class="text-break">@GetSubstringDescription(b.Description)</div>
                             </div>
                             <div id="BottomContent" class="d-flex justify-content-lg-start">
-                                <span class="me-2">
+                                <span class="mx-2">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tags" viewBox="0 0 16 16">
                                         <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z" />
                                         <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
@@ -44,12 +44,12 @@
                                 <div>
                                     @b.Tag.TagName
                                 </div>
-                                <hr/>
+                                <hr />
                             </div>
                         </div>
                     }
                 }
-                
+
             </div>
         </div>
     </main>
@@ -58,7 +58,7 @@
         <div class="sidebar row ">
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="HomePage"><span>Home</span></button>
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span>Your Posts</span></button>
-            <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span>Bookmarks</span></button> @* TODO: add Bookmarks page*@
+            <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span>Bookmarks</span></button> 
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span>Write</span></button>
         </div>
     </div>
@@ -74,7 +74,8 @@
     {
         loggedInUser = await authProvider.GetUserFromAuth(userData);
 
-        var results = await blogpostData.GetUsersBlogPosts(loggedInUser.Id);
+        var results = await blogpostData.GetAllBlogPosts();
+        results = results.Where(b => b.Bookmarks.Contains(loggedInUser?.Id)).ToList();
 
         if (loggedInUser is not null && results is not null)
         {
@@ -102,7 +103,7 @@
 
     private void CreatePage()
     {
-
+        
         if (loggedInUser is not null)
         {
             navManager.NavigateTo("/Create");
@@ -115,7 +116,7 @@
 
     private void OpenDetails(BlogPostModel blogPost)
     {
-
+        
         if (loggedInUser is not null)
         {
             navManager.NavigateTo($"/Details/{blogPost.Id}");

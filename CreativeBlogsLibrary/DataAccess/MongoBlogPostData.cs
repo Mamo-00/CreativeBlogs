@@ -43,6 +43,8 @@ public class MongoBlogPostData : IBlogPostData
 		return output;
 	}
 
+	
+
 	public async Task<BlogPostModel> GetBlogPost(string id)
 	{
 		var results = await blogposts.FindAsync(b => b.Id == id);

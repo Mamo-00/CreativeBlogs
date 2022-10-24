@@ -14,14 +14,14 @@
 @*<div class="left-side-width float-start vertical-r"></div>*@
 
 <div class="row ">
-    <div class="col-md-8  d-flex justify-content-evenly my-2 py-2  border-style ">
+    <div class="col-md-8  d-flex justify-content-evenly my-2 py-2 border-style sort-btn-bg">
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByRecent()"><span>RECENT</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByTop()"><span>TOP</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByHot()"><span>HOT</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByOld()"><span>OLD</span></button>
     </div>
     <div class="col-md-1"></div>
-    <div class="searchbox col-md-3 my-2 ">
+    <div class="searchbox col-md-3 my-2">
         <input type="text"
                 class="form-control rounded-control "
                 placeholder="Search"
@@ -35,7 +35,7 @@
     <main class="col-md-8 col-xl-9 mt-2 ps-0">
 
 
-        <div class="container-tags ">
+        <div class="container-tags">
             @if (tags?.Count > 0)
             {
                 @foreach (var t in tags)
@@ -51,33 +51,42 @@
             {
                 <Virtualize Items="@blogposts" Context="b" OverscanCount="10">
                     <div id="TheBigContainer" class=" my-5 overflow-auto ">
-                        <div id="TopRowOfContainer" class="d-flex justify-content-start">
+                        <div id="TopRowOfContainer" class="d-flex justify-content-start mb-2">
                             <div class="me-2">@b?.Author.DisplayName</div>
                             <div>@b?.DateCreated.ToString("MM.dd.yyyy")</div>
                             <span class="ms-auto me-2 d-flex gap-1 align-items-center" @onclick="() => Bookmark(b)">
                                 <div>@GetBookmarkText(b)</div>
-                                @if (loggedInUser is not null)
+
+                                @if (b.Author.Id != loggedInUser?.Id)
                                 {
-                                    @if (b.Author.Id != loggedInUser.Id)
+                                    if (b.Bookmarks.Contains(loggedInUser?.Id))
                                     {
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill pointer" viewBox="0 0 16 16">
+                                            <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
                                         </svg>
                                     }
                                     else
                                     {
-                                        <div id="empty"></div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark pointer" viewBox="0 0 16 16">
+                                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+                                        </svg>
                                     }
+
                                 }
+                                else
+                                {
+                                    <div id="empty"></div>
+                                }
+                                
 
                             </span>
                         </div>
                         <div id="MiddleContent" @onclick="(() => OpenDetails(b))">
-                            <div id="Header" class="fw-bold">@b.Title</div>
-                            <div id="Description">@GetSubstringDescription(b.Description)</div>
+                            <div id="Header" class="font-style text-break">@b.Title</div>
+                            <div id="Description" class="text-break">@GetSubstringDescription(b.Description)</div>
                         </div>
-                        <div id="BottomContent" class="d-flex justify-content-lg-start">
-                            <span class="mx-2">
+                        <div id="BottomContent" class="d-flex justify-content-lg-start mb-2">
+                            <span class="me-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" id="bookmark" class="bi bi-tags" viewBox="0 0 16 16">
                                     <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z" />
                                     <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
@@ -87,7 +96,9 @@
                                 @b.Tag.TagName
                             </div>
                         </div>
+
                     </div>
+                    <hr class="horizontal-ruler" />
                 </Virtualize>
             }
         </div>
@@ -99,7 +110,7 @@
         <div class="sidebar row ">
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Home</span></button>
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span >Your Posts</span></button>
-            <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Bookmarks</span></button> @* TODO: add Bookmarks page*@
+            <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span >Bookmarks</span></button>
             <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span >Write</span></button>
         </div>
     </div>
@@ -268,7 +279,7 @@
         //    output = output.OrderByDescending(b => b.Bookmarks.Count)
         //                    .ThenByDescending(b => b.DateCreated).ToList();
         //}
-        //// TODO: fix the logic - this shit aint it lil bro
+        //
         //if (isSortedByOld == true && isSortedByNew == false)
         //{
         //    output = output.OrderBy(b => b.DateCreated).ToList();
@@ -310,6 +321,19 @@
         if (loggedInUser is not null)
         {
             navManager.NavigateTo("/Posts");
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+
+    }
+
+    private void BookmarksPage()
+    {
+        if (loggedInUser is not null)
+        {
+            navManager.NavigateTo("/Bookmarks");
         }
         else
         {
