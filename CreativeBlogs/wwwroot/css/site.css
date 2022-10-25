@@ -1,6 +1,6 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700;900&display=swap');
 
 html, body {
     font-family: 'Roboto', sans-serif;
@@ -30,7 +30,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Inconsolata', sans-serif;
+    font-family: 'Inconsolata', monospace;
 }
 
 h1:focus {
@@ -38,8 +38,13 @@ h1:focus {
 }
 
 a, .btn-link {
-    color: #0071c1;
+    color: #A64B2A;
+    text-decoration: none;
 }
+    a:hover, .btn-link:hover {
+        color: #D79771;
+        text-decoration: none;
+    }
 
 .btn-primary {
     color: #fff;
@@ -58,6 +63,15 @@ a, .btn-link {
 .searhbox:focus {
     border: none;
 }
+
+.searchbox {
+   --bs-gutter-x: 3.5rem;
+}
+
+.s-input-style {
+    border-radius: 20px;
+}
+
 .content {
     padding-top: 0;
 }
@@ -236,12 +250,15 @@ input[type="checkbox"] {
 .radio-item-group {
     border-color: #A64B2A;
     border-width: 1px;
-    
+    color: #A64B2A;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.56rem;
+    font-weight: 900;
     border-radius: 15px;
     width: auto;
     min-width: 0;
     white-space: nowrap;
-    
+    letter-spacing: 1.5px;
 }
 
 
@@ -280,7 +297,7 @@ border: 2px solid blue;
     display: grid;
     gap: 2rem;
     grid-auto-flow: column;
-    grid-auto-columns: 21%;
+    grid-auto-columns: 18%;
     overflow-x: auto;
     
 }
@@ -294,7 +311,7 @@ border: 2px solid blue;
     padding: 1rem;
     list-style: none;
     
-    margin: 2rem 1rem 1rem 2rem;
+    margin: 1rem;
     
 
 }
@@ -337,7 +354,7 @@ border: 2px solid blue;
         display: grid;
         gap: 2rem;
         grid-auto-flow: column;
-        grid-auto-columns: 33%;
+        grid-auto-columns: 23%;
         overflow-x: auto;
     }
 }
@@ -365,4 +382,15 @@ border: 2px solid blue;
     background-image: linear-gradient(to right, #A64B2A 0%, #D79771 100%);
     background-clip: border-box;
     border-radius: 20px;
+}
+
+.nav-links {
+    display: flex;
+    text-align: center;
+    justify-content: flex-end;
+}
+
+.login-link {
+    padding-left: 1rem;
+    
 }

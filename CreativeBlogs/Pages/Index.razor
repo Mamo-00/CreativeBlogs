@@ -14,16 +14,16 @@
 @*<div class="left-side-width float-start vertical-r"></div>*@
 
 <div class="row ">
-    <div class="col-md-8  d-flex justify-content-evenly my-2 py-2 border-style sort-btn-bg">
+    <div class="col-md-8 col-xl-9  d-flex justify-content-evenly flex-wrap my-2 py-2 border-style sort-btn-bg">
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByRecent()"><span>RECENT</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByTop()"><span>TOP</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByHot()"><span>HOT</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByOld()"><span>OLD</span></button>
     </div>
-    <div class="col-md-1"></div>
-    <div class="searchbox col-md-3 my-2">
+    
+    <div class="searchbox col-md-4 col-xl-3 my-auto">
         <input type="text"
-                class="form-control rounded-control "
+                class="form-control s-input-style "
                 placeholder="Search"
                 @bind-value="@this.InputValue"
                 @bind-value:event="oninput"
@@ -108,10 +108,10 @@
 
     <div class="col-md-4 col-xl-3 d-none d-md-block">
         <div class="sidebar row ">
-            <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Home</span></button>
-            <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span >Your Posts</span></button>
-            <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span >Bookmarks</span></button>
-            <button class="btn col-md-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span >Write</span></button>
+            <button class="btn col-md-12 col-lg-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Home</span></button>
+            <button class="btn col-md-12 col-lg-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span >Your Posts</span></button>
+            <button class="btn col-md-12 col-lg-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span >Bookmarks</span></button>
+            <button class="btn col-md-12 col-lg-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span>Write</span></button>
         </div>
     </div>
 
