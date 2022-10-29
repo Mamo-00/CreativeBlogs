@@ -8,34 +8,128 @@
 
 <PageTitle>Creative Blogs</PageTitle>
 
-<link rel="shortcut icon" type="image/x-icon" href="./Images/" />
 
 
-@*<div class="left-side-width float-start vertical-r"></div>*@
 
-<div class="row ">
-    <div class="col-md-8 col-xl-9  d-flex justify-content-evenly flex-wrap my-2 py-2 border-style sort-btn-bg">
+@*<div class="left-side-width float-start vertical-r"></div><link rel="shortcut icon" type="image/x-icon" href="./Images/" />*@
+
+<div class="row mt-2">
+    @*<div class="col-md-8 col-xl-9  d-flex justify-content-evenly flex-wrap my-2 py-2 border-style sort-btn-bg">
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByRecent()"><span>RECENT</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByTop()"><span>TOP</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByHot()"><span>HOT</span></button>
         <button class="btn mx-auto my-2 custom-button" @onclick="() => OrderByOld()"><span>OLD</span></button>
-    </div>
+
+    </div>*@
     
-    <div class="searchbox col-md-4 col-xl-3 my-auto">
-        <input type="text"
-                class="form-control s-input-style "
-                placeholder="Search"
-                @bind-value="@this.InputValue"
-                @bind-value:event="oninput"
-                @onkeydown="@OnSearchInput" />
+    
+    <div class="col-md-8 col-xl-9 col-12 mt-2 justify-content-evenly ">
+        <div class="row">
+            <div class="col-4 px-0">
+                <div class="dropdown dp-style ">
+                    <button class="btn custom-button dropdown-toggle mx-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="sortOrder"><span>@sortPosts</span></button>
+                    <ul class="dropdown-menu dropdown-menu-dark menu-bg" aria-labelledby="sortOrder">
+                        <li><div class="dropdown-item text-black" @onclick="() => OrderByRecent()"><span>NEW</span></div></li>
+                        <li> <div class="dropdown-item text-black" @onclick="() => OrderByTop()"><span>TOP</span></div></li>
+                        <li><div class="dropdown-item text-black" @onclick="() => OrderByHot()"><span>HOT</span></div></li>
+                        <li><div class="dropdown-item text-black" @onclick="() => OrderByOld()"><span>OLD</span></div></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-4 px-0">
+                <div class="dropdown dp-style ">
+                    <button class="btn custom-button dropdown-toggle mx-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="sortTags">
+                        @switch (selectedTag)
+                        {
+                            case "Health & Fitness":
+                                <span>H&F</span>
+                                break;
+
+                            case "Science":
+                                <span>Sci</span>
+                                break;
+
+                            case "Literature":
+                                <span>Lit</span>
+                                break;
+
+                            case "Philosophy":
+                                <span>Phil</span>
+                                break;
+
+                            case "Religion":
+                                <span>Rel</span>
+                                break;
+
+                            case "Hobbies":
+                                <span>Hob</span>
+                                break;
+
+                            case "Fiction":
+                                <span>Fic</span>
+                                break;
+
+                            case "Travelling":
+                                <span>Trav</span>
+                                break;
+
+                            case "Technology":
+                                <span>Tech</span>
+                                break;
+
+                            case "Politics":
+                                <span>Pol</span>
+                                break;
+
+                            default: 
+                                <span>@selectedTag</span>
+                                break;
+                        }
+
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark menu-bg" aria-labelledby="sortTags">
+                        @if (tags?.Count > 0)
+                        {
+                            @foreach (var t in tags)
+                            {
+                                <li id="@t.TagName" @onclick="(() =>  OnTagClick(t.TagName))"><a class="dropdown-item text-black " href="#">@t.TagName</a></li>
+
+                            }
+                        }
+
+                    </ul>
+                </div>
+            </div>
+            <div class="d-block d-md-none col-4 px-0 ">
+                <div class="dropdown dp-style ">
+                    <button class="btn custom-button dropdown-toggle mx-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="sortOrder"><span>Home</span></button>
+                    <ul class="dropdown-menu dropdown-menu-dark menu-bg" aria-labelledby="sortOrder">
+                        <li><div class="dropdown-item text-black" @onclick="HomePage"><span>Home</span></div></li>
+                        <li><div class="dropdown-item text-black" @onclick="YourPostsPage"><span>Your Posts</span></div></li>
+                        <li><div class="dropdown-item text-black" @onclick="BookmarksPage"><span>Bookmarks</span></div></li>
+                        <li><div class="dropdown-item text-black" @onclick="CreatePage"><span>Write</span></div></li>
+                        <li><div class="dropdown-item text-black"><span><LoginDisplay /></span></div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="searchbox col-md-4 col-xl-3 mt-4 mx-auto">
+        <input type="text"
+               class="form-control s-input-style "
+               placeholder="Search"
+               @bind-value="@this.InputValue"
+               @bind-value:event="oninput"
+               @onkeydown="@OnSearchInput" />
+    </div>
+
 </div>
 
 <div class="row">
     <main class="col-md-8 col-xl-9 mt-2 ps-0">
 
 
-        <div class="container-tags">
+        @*<div class="container-tags">
             @if (tags?.Count > 0)
             {
                 @foreach (var t in tags)
@@ -44,13 +138,13 @@
                 }
 
             }
-        </div>
+        </div>*@
 
         <div id="blog-post-section" >
             @if (blogposts is not null)
             {
                 <Virtualize Items="@blogposts" Context="b" OverscanCount="10">
-                    <div id="TheBigContainer" class=" my-5 overflow-auto ">
+                    <div id="TheBigContainer" class=" mt-4 overflow-auto ">
                         <div id="TopRowOfContainer" class="d-flex justify-content-start mb-2">
                             <div class="me-2">@b?.Author.DisplayName</div>
                             <div>@b?.DateCreated.ToString("MM.dd.yyyy")</div>
@@ -75,7 +169,10 @@
                                 }
                                 else
                                 {
-                                    <div id="empty"></div>
+                                    
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x-fill" style="color: rgba(169,169,169,1);" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
+                                    </svg>
                                 }
                                 
 
@@ -96,6 +193,10 @@
                                 @b.Tag.TagName
                             </div>
                         </div>
+                         <div class="nav-links my-2">
+                             @ReadingTime(b.Description)
+                         </div>
+                        
 
                     </div>
                     <hr class="horizontal-ruler" />
@@ -108,13 +209,14 @@
 
     <div class="col-md-4 col-xl-3 d-none d-md-block">
         <div class="sidebar row ">
-            <button class="btn col-md-12 col-lg-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Home</span></button>
-            <button class="btn col-md-12 col-lg-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span >Your Posts</span></button>
-            <button class="btn col-md-12 col-lg-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span >Bookmarks</span></button>
-            <button class="btn col-md-12 col-lg-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span>Write</span></button>
+            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Home</span></button>
+            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span >Your Posts</span></button>
+            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span >Bookmarks</span></button>
+            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span>Write</span></button>
+            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button"><span><LoginDisplay /></span></button>
         </div>
     </div>
-
+   
 </div>
 
 
@@ -134,10 +236,11 @@
 
     private string selectedTag = "All";
     private string searchText = "";
-    private string sortPosts = "recent";
-    bool isSortedByNew = true;
-    bool isSortedByOld = true;
+    private string sortPosts = "new";
+    private bool isSortedByNew = true;
+    private bool isSortedByOld = true;
 
+   
     protected async override Task OnInitializedAsync() 
     {
         tags = await tagData.GetAllTags();
@@ -205,7 +308,7 @@
         searchText = stringResults.Success ? stringResults.Value : "";
 
         stringResults = await sessionStorage.GetAsync<string>(nameof(sortPosts));
-        sortPosts = stringResults.Success ? stringResults.Value : "recent";
+        sortPosts = stringResults.Success ? stringResults.Value : "new";
 
         var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByNew));
         isSortedByNew = boolResults.Success ? boolResults.Value : true;
@@ -246,7 +349,7 @@
             ).ToList();
         }
 
-        if (sortPosts == "recent")
+        if (sortPosts == "new")
         {
             output = output.OrderByDescending(b => b.DateCreated).ToList();
         }
@@ -259,7 +362,7 @@
         {
             //Get the top posts in descending order within a timeframe of 1 week
             DateTime dt7 = DateTime.Today.AddDays(-7);
-            
+
             output = output.Where(b => b.DateCreated > dt7).OrderByDescending(b => b.Bookmarks.Count)
             .ThenByDescending(b => b.DateCreated).ToList();
         }
@@ -302,6 +405,7 @@
     private void HomePage()
     {
         navManager.NavigateTo("/");
+       
     }
 
     private void CreatePage() 
@@ -309,6 +413,7 @@
         if (loggedInUser is not null)
         {
             navManager.NavigateTo("/Create");
+            
         }
         else
         {
@@ -321,6 +426,7 @@
         if (loggedInUser is not null)
         {
             navManager.NavigateTo("/Posts");
+            
         }
         else
         {
@@ -334,6 +440,7 @@
         if (loggedInUser is not null)
         {
             navManager.NavigateTo("/Bookmarks");
+            
         }
         else
         {
@@ -365,27 +472,31 @@
     //    await FilterBlogPosts();
     //}
 
-    private async Task OrderByRecent(string recent = "recent")
+    private async Task OrderByRecent(string recent = "new")
     {
         sortPosts = recent;
+     
         await FilterBlogPosts();
     }
 
     private async Task OrderByTop(string top = "top")
     {
         sortPosts = top;
+       
         await FilterBlogPosts();
     }
 
     private async Task OrderByHot(string hot = "hot")
     {
         sortPosts = hot;
+        
         await FilterBlogPosts();
     }
 
     private async Task OrderByOld(string old = "old")
     {
         sortPosts = old;
+        
         await FilterBlogPosts();
     }
 
@@ -417,7 +528,7 @@
     {
 
         selectedTag = tag;
-
+       
         await FilterBlogPosts();
     }
 
@@ -431,6 +542,53 @@
         navManager.NavigateTo($"/Details/{blogPost.Id}");
     }
 
+    private int GetWordCount(string text)
+    {
+        int wordCount = 0;
+        int index = 0;
+        while (index < text.Length && char.IsWhiteSpace(text[index]))
+            index++;
+
+        while (index < text.Length)
+        {
+            // check if current char is part of a word
+            while (index < text.Length && !char.IsWhiteSpace(text[index]))
+                index++;
+
+            wordCount++;
+
+            // skip whitespace until next word
+            while (index < text.Length && char.IsWhiteSpace(text[index]))
+                index++;
+        }
+
+        return wordCount;
+    }
+
+    private string ReadingTime(string text)
+    {
+        int wordCount = 0;
+        int timeToRead = 0;
+        string readingTime = "";
+
+        wordCount = GetWordCount(text);
+
+        timeToRead = wordCount / 250;
+
+        //TimeSpan time = TimeSpan.FromMinutes(timeToRead);
+        //string timeToString = time.ToString("mm");
+        
+        if (timeToRead < 1.5 )
+        {
+            readingTime = "1 minute";
+        }
+        else
+        {
+            readingTime = timeToRead.ToString() + " minutes";
+        }
+
+        return readingTime;
+    }
 
 
     private async Task Bookmark(BlogPostModel blogpost) 

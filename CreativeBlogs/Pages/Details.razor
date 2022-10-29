@@ -15,15 +15,28 @@
                         <span class="ms-auto me-2 d-flex gap-1 align-items-center" @onclick="Bookmark">
                             <div>@GetBookmarkText(blogpost)</div>
 
-                            @if (blogpost.Author.Id != loggedInUser.Id)
+                            @if (blogpost.Author.Id != loggedInUser?.Id)
                             {
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
-                                </svg>
+                                if (blogpost.Bookmarks.Contains(loggedInUser?.Id))
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill pointer" viewBox="0 0 16 16">
+                                        <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+                                    </svg>
+                                }
+                                else
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark pointer" viewBox="0 0 16 16">
+                                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+                                    </svg>
+                                }
+
                             }
                             else
                             {
-                                <div id="empty"></div>
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x-fill" style="color: rgba(169,169,169,1);" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
+                                </svg>
                             }
                         </span>
                     </div>
@@ -53,11 +66,14 @@
                         @blogpost.Tag.TagName
                     </div>
                 </div>
-                <div id="buttons" class="d-flex w-50 justify-content-end ms-5">
-                    <button class="btn btn-dark mx-2 my-2" @onclick="ClosePage">Home</button>
-                    
-                </div>
+                
+                 <button class="btn mx-auto my-2 custom-button" @onclick="ClosePage"><span>Home</span></button>
+                
             </div>
+        }
+        else
+        {
+            <div>Nothing to show, sorry</div>
         }
     </div>
 </div>
@@ -111,13 +127,13 @@
 
         wordCount = GetWordCount(text);
 
-        timeToRead = wordCount / 225;
+        timeToRead = wordCount / 250;
 
         //TimeSpan time = TimeSpan.FromMinutes(timeToRead);
         //string timeToString = time.ToString("mm");
-        if (timeToRead < 1)
+        if (timeToRead < 1.5)
         {
-            readingTime = "less than 1 minute";
+            readingTime = "1 minute";
         }
         else
         {

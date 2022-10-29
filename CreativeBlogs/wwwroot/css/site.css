@@ -42,7 +42,7 @@ a, .btn-link {
     text-decoration: none;
 }
     a:hover, .btn-link:hover {
-        color: #D79771;
+        color: saddlebrown;
         text-decoration: none;
     }
 
@@ -132,13 +132,12 @@ a, .btn-link {
 .border-style {
     border: solid;
     border-color: #A64B2A;
-    border-radius: 20px;
+    border-radius: 15px;
     padding: 0.5rem;
     border-width: 2px;
 }
 
 .sort-btn-bg {
-    
     background-image: linear-gradient(to right, #F7E6CC 20%, #EFDFC6 100%);
 }
 .font-style {
@@ -171,7 +170,7 @@ a, .btn-link {
 
 .custom-button {
     background-image: linear-gradient(to right, #A64B2A 0%, #D79771 100%);
-    border-radius: 40px;
+    border-radius: 25px;
     box-sizing: border-box;
     color: #A64B2A;
     display: block;
@@ -180,42 +179,61 @@ a, .btn-link {
     position: relative;
     text-decoration: none;
     text-transform: uppercase;
-    width: 150px;
+   
+    width: 130px;
     z-index: 2;
+    box-shadow: 4px 4px 4px rgba(0,0,0,0.2);
 }
 
-.custom-button span {
-    align-items: center;
-    background: #F7E6CC;
-    border-radius: 40px;
-    display: flex;
-    justify-content: center;
-    height: 100%;
-    transition: background .5s ease;
-    width: 100%;
-}
+    .custom-button:focus {
+        box-shadow: 4px 4px 4px rgba(0,0,0,0.2);
+    }
 
-.custom-button:hover span {
-    background: transparent;
-}
+    .custom-button span {
+        align-items: center;
+        background: #F7E6CC;
+        border-radius: 25px;
+        display: flex;
+        justify-content: center;
+        height: 100%;
+        transition: background .5s ease;
+        width: 100%;
+    }
+    .custom-button:hover {
+            color: #F7E6CC;
+    }
 
-.custom-button:hover {
-    color: #F7E6CC;
-}
+        .custom-button:hover span {
+            background: transparent;
+        }
 
-input[type="checkbox"] {
-    opacity: 0;
-}
+@media only screen and (max-width: 460px) {
 
+    .custom-button {
+        background-image: linear-gradient(to right, #A64B2A 0%, #D79771 100%);
+        border-radius: 25px;
+        box-sizing: border-box;
+        color: #A64B2A;
+        display: block;
+        height: 2.5rem;
+        padding: 2px;
+        position: relative;
+        text-decoration: none;
+        text-transform: uppercase;
+        width: 75px;
+        z-index: 2;
+        box-shadow: 4px 4px 4px rgba(0,0,0,0.2);
+    }
+}
 .list-group-horizontal .list-group-item {
     display: inline-block;
 }
 
-.list-group-horizontal .list-group-item:focus {
-    background-color: #41AADA !important;
-    color: #fff;
-    display: inline-block;
-}
+    .list-group-horizontal .list-group-item:focus {
+        background-color: #41AADA !important;
+        color: #fff;
+        display: inline-block;
+    }
 
 .list-group-horizontal .list-group-item {
     margin-bottom: 0;
@@ -223,17 +241,15 @@ input[type="checkbox"] {
     margin-right: 0;
 }
 
-.list-group-horizontal .list-group-item:first-child {
-  
-    border-bottom-left-radius: 4px;
-}
+    .list-group-horizontal .list-group-item:first-child {
+        border-bottom-left-radius: 4px;
+    }
 
-.list-group-horizontal .list-group-item:last-child {
-  
-    border-bottom-left-radius: 0;
-}
+    .list-group-horizontal .list-group-item:last-child {
+        border-bottom-left-radius: 0;
+    }
 
-.radio-item-group input[type="radio"]{
+.radio-item-group input[type="radio"] {
     display: none;
 }
 
@@ -244,7 +260,6 @@ input[type="checkbox"] {
     border-radius: 20px;
     width: 100%;
     border-style: solid;
-    
 }
 
 .radio-item-group {
@@ -262,23 +277,20 @@ input[type="checkbox"] {
 }
 
 
-.radio-item-group input[type="radio"]:checked + label {
-    background-color: #A64B2A;
-    color: #F2D7D9;
-    
-    border: 0.1rem #A64B2A solid;
-    
-}
+    .radio-item-group input[type="radio"]:checked + label {
+        background-color: #A64B2A;
+        color: #F2D7D9;
+        border: 0.1rem #A64B2A solid;
+    }
 
 .tag-focus {
     background-color: #A64B2A;
     color: #F2D7D9;
-   
     border: 0.1rem #A64B2A solid;
 }
 
 .border-posts-blue {
-border: 2px solid blue;
+    border: 2px solid blue;
 }
 
 .border-posts-red {
@@ -299,98 +311,113 @@ border: 2px solid blue;
     grid-auto-flow: column;
     grid-auto-columns: 18%;
     overflow-x: auto;
-    
 }
 
 
 .sidebar {
-    
     border: 2px #A64B2A solid;
     border-radius: 50px;
     height: auto;
     padding: 1rem;
-    list-style: none;
-    
+    margin: 1rem;
+    margin-top: 2.5rem;
+}
+
+.dropdown-nav {
+    background-color: #D79771;
+    border-radius: 15px;
+    height: auto;
+    padding: 0.5rem;
     margin: 1rem;
     
-
+    margin-bottom: 0;
 }
-@media only screen and (max-width: 710px) {
-    .container-tags {
-        display: grid;
-        gap: 2rem;
-        grid-auto-flow: column;
-        grid-auto-columns: 43%;
-        overflow-x: auto;
-        
+
+.menu-bg {
+    background-color: #D79771;
+    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+.dp-style {
+  margin-top: 1rem;
+}
+
+    @media only screen and (max-width: 710px) {
+        .container-tags {
+            display: grid;
+            gap: 2rem;
+            grid-auto-flow: column;
+            grid-auto-columns: 43%;
+            overflow-x: auto;
+        }
     }
-}
 
-@media only screen and (max-width: 480px) {
-    .container-tags {
-        display: grid;
-        gap: 2rem;
-        grid-auto-flow: column;
-        grid-auto-columns: 93%;
-        overflow-x: auto;
+    @media only screen and (max-width: 480px) {
+        .container-tags {
+            display: grid;
+            gap: 2rem;
+            grid-auto-flow: column;
+            grid-auto-columns: 41%;
+            overflow-x: auto;
+        }
     }
-}
 
-@media only screen and (max-width: 320px) {
-    .container-tags {
-        display: grid;
-        gap: 2rem;
-        grid-auto-flow: column;
-        grid-auto-columns: 100%;
-        overflow-x: auto;
-        margin-left: auto;
-        margin-right: auto;
-        
+    @media only screen and (max-width: 320px) {
+        .container-tags {
+            display: grid;
+            gap: 2rem;
+            grid-auto-flow: column;
+            grid-auto-columns: 53%;
+            overflow-x: auto;
+            margin-left: auto;
+            margin-right: auto;
+        }
     }
-}
 
-@media only screen and (min-width: 710px) {
-    .container-tags {
-        display: grid;
-        gap: 2rem;
-        grid-auto-flow: column;
-        grid-auto-columns: 23%;
-        overflow-x: auto;
+    @media only screen and (min-width: 710px) {
+        .container-tags {
+            display: grid;
+            gap: 2rem;
+            grid-auto-flow: column;
+            grid-auto-columns: 23%;
+            overflow-x: auto;
+        }
     }
-}
 
-/* width */
-::-webkit-scrollbar {
-    width: 10px;
-}
+    /* width */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
 
-/* Track */
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 0.5rem;
-}
+    /* Track */
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 0.5rem;
+    }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-    background-image: linear-gradient(to right, #D79771 0%, #A64B2A 100%);
-    background-clip: border-box;
-    border-radius: 20px;
-}
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+        background-image: linear-gradient(to right, #D79771 0%, #A64B2A 100%);
+        background-clip: border-box;
+        border-radius: 20px;
+    }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background-image: linear-gradient(to right, #A64B2A 0%, #D79771 100%);
-    background-clip: border-box;
-    border-radius: 20px;
-}
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background-image: linear-gradient(to right, #A64B2A 0%, #D79771 100%);
+            background-clip: border-box;
+            border-radius: 20px;
+        }
 
-.nav-links {
-    display: flex;
-    text-align: center;
-    justify-content: flex-end;
-}
+    .nav-links {
+        display: flex;
+        text-align: center;
+        justify-content: flex-end;
+    }
 
-.login-link {
-    padding-left: 1rem;
-    
-}
+    @media only screen and (min-width: 768px) {
+        .login-link {
+            padding-left: 2.0rem;
+            padding-right: 2.0rem;
+        }
+    }
