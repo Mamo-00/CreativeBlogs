@@ -42,43 +42,43 @@
                         @switch (selectedTag)
                         {
                             case "Health & Fitness":
-                                <span>H&F</span>
+                                <span>H&F...</span>
                                 break;
 
                             case "Science":
-                                <span>Sci</span>
+                                <span>Sci...</span>
                                 break;
 
                             case "Literature":
-                                <span>Lit</span>
+                                <span>Lit...</span>
                                 break;
 
                             case "Philosophy":
-                                <span>Phil</span>
+                                <span>Phil...</span>
                                 break;
 
                             case "Religion":
-                                <span>Rel</span>
+                                <span>Rel...</span>
                                 break;
 
                             case "Hobbies":
-                                <span>Hob</span>
+                                <span>Hob...</span>
                                 break;
 
                             case "Fiction":
-                                <span>Fic</span>
+                                <span>Fic...</span>
                                 break;
 
                             case "Travelling":
-                                <span>Trav</span>
+                                <span>Trav...</span>
                                 break;
 
                             case "Technology":
-                                <span>Tech</span>
+                                <span>Tech...</span>
                                 break;
 
                             case "Politics":
-                                <span>Pol</span>
+                                <span>Pol...</span>
                                 break;
 
                             default: 
@@ -101,7 +101,7 @@
                 </div>
             </div>
             <div class="d-block d-md-none col-4 px-0 ">
-                <div class="dropdown dp-style ">
+                <div class="dropdown dp-style">
                     <button class="btn custom-button dropdown-toggle mx-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="sortOrder"><span>Home</span></button>
                     <ul class="dropdown-menu dropdown-menu-dark menu-bg" aria-labelledby="sortOrder">
                         <li><div class="dropdown-item text-black" @onclick="HomePage"><span>Home</span></div></li>
@@ -140,28 +140,28 @@
             }
         </div>*@
 
-        <div id="blog-post-section" >
+        <section id="blog-post-section" class="shadow px-2 py-2 mt-4" >
             @if (blogposts is not null)
             {
                 <Virtualize Items="@blogposts" Context="b" OverscanCount="10">
-                    <div id="TheBigContainer" class=" mt-4 overflow-auto ">
+                    <article id="TheBigContainer" class=" mt-4 overflow-auto ">
                         <div id="TopRowOfContainer" class="d-flex justify-content-start mb-2">
                             <div class="me-2">@b?.Author.DisplayName</div>
-                            <div>@b?.DateCreated.ToString("MM.dd.yyyy")</div>
-                            <span class="ms-auto me-2 d-flex gap-1 align-items-center" @onclick="() => Bookmark(b)">
-                                <div>@GetBookmarkText(b)</div>
+                            <div class="me-1">@b?.DateCreated.ToString("MM.dd.yyyy")</div>
+                            <span class="ms-auto ms-2 d-flex gap-1 align-items-baseline" @onclick="() => Bookmark(b)">
+                                <div class="ps-1">@GetBookmarkText(b)</div>
 
                                 @if (b.Author.Id != loggedInUser?.Id)
                                 {
                                     if (b.Bookmarks.Contains(loggedInUser?.Id))
                                     {
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill pointer" viewBox="0 0 16 16">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-bookmark-fill pointer pt-1" viewBox="0 0 16 16">
                                             <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
                                         </svg>
                                     }
                                     else
                                     {
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark pointer" viewBox="0 0 16 16">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-bookmark pointer pt-1" viewBox="0 0 16 16">
                                             <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
                                         </svg>
                                     }
@@ -170,7 +170,7 @@
                                 else
                                 {
                                     
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x-fill" style="color: rgba(169,169,169,1);" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="19" fill="currentColor" class="bi bi-bookmark-x-fill pt-1" style="color: rgba(169,169,169,1);" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
                                     </svg>
                                 }
@@ -179,8 +179,8 @@
                             </span>
                         </div>
                         <div id="MiddleContent" @onclick="(() => OpenDetails(b))">
-                            <div id="Header" class="font-style text-break">@b.Title</div>
-                            <div id="Description" class="text-break">@GetSubstringDescription(b.Description)</div>
+                            <h2 id="Header" class="font-style text-break">@b.Title</h2>
+                            <p id="Description" class="text-break">@GetSubstringDescription(b.Description)</p>
                         </div>
                         <div id="BottomContent" class="d-flex justify-content-lg-start mb-2">
                             <span class="me-2">
@@ -198,22 +198,22 @@
                          </div>
                         
 
-                    </div>
+                    </article>
                     <hr class="horizontal-ruler" />
                 </Virtualize>
             }
-        </div>
+        </section>
     </main>
 
     @*<div id="right-vr" class="right-side-width vertical-l "></div>*@
 
     <div class="col-md-4 col-xl-3 d-none d-md-block">
-        <div class="sidebar row ">
-            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Home</span></button>
-            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span >Your Posts</span></button>
-            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span >Bookmarks</span></button>
-            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span>Write</span></button>
-            <button class="btn col-md-12 col-lg-12 col-xl-12 mx-auto my-4 custom-button"><span><LoginDisplay /></span></button>
+        <div class="sidebar row shadow flex-column">
+            <button class="btn col-12 mx-auto my-4 custom-button" @onclick="HomePage"><span >Home</span></button>
+            <button class="btn col-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span >Your Posts</span></button>
+            <button class="btn col-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span >Bookmarks</span></button>
+            <button class="btn col-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span>Write</span></button>
+            <button class="btn col-12 mx-auto my-4 custom-button" aria-label="Log out"><span><LoginDisplay /></span></button>
         </div>
     </div>
    
@@ -236,7 +236,7 @@
 
     private string selectedTag = "All";
     private string searchText = "";
-    private string sortPosts = "new";
+    private string sortPosts = "NEW";
     private bool isSortedByNew = true;
     private bool isSortedByOld = true;
 
@@ -308,7 +308,7 @@
         searchText = stringResults.Success ? stringResults.Value : "";
 
         stringResults = await sessionStorage.GetAsync<string>(nameof(sortPosts));
-        sortPosts = stringResults.Success ? stringResults.Value : "new";
+        sortPosts = stringResults.Success ? stringResults.Value : "NEW";
 
         var boolResults = await sessionStorage.GetAsync<bool>(nameof(isSortedByNew));
         isSortedByNew = boolResults.Success ? boolResults.Value : true;
@@ -349,16 +349,16 @@
             ).ToList();
         }
 
-        if (sortPosts == "new")
+        if (sortPosts == "NEW")
         {
             output = output.OrderByDescending(b => b.DateCreated).ToList();
         }
-        if (sortPosts == "top") 
+        if (sortPosts == "TOP") 
         {
             output = output.OrderByDescending(b => b.Bookmarks.Count)
                             .ThenByDescending(b => b.DateCreated).ToList();
         }
-        if (sortPosts == "hot")
+        if (sortPosts == "HOT")
         {
             //Get the top posts in descending order within a timeframe of 1 week
             DateTime dt7 = DateTime.Today.AddDays(-7);
@@ -366,7 +366,7 @@
             output = output.Where(b => b.DateCreated > dt7).OrderByDescending(b => b.Bookmarks.Count)
             .ThenByDescending(b => b.DateCreated).ToList();
         }
-        if (sortPosts == "old")
+        if (sortPosts == "OLD")
         {
             output = output.OrderBy(b => b.DateCreated).ToList();
         }
@@ -460,40 +460,29 @@
             return description;
         }
     }
-    //private async Task OrderByNew(bool isNew) 
-    //{
-    //    isSortedByNew = isNew;
-    //    await FilterBlogPosts();
-    //}
 
-    //private async Task OrderByOld(bool isOld) 
-    //{
-    //    isSortedByOld = isOld;
-    //    await FilterBlogPosts();
-    //}
-
-    private async Task OrderByRecent(string recent = "new")
+    private async Task OrderByRecent(string recent = "NEW")
     {
         sortPosts = recent;
      
         await FilterBlogPosts();
     }
 
-    private async Task OrderByTop(string top = "top")
+    private async Task OrderByTop(string top = "TOP")
     {
         sortPosts = top;
        
         await FilterBlogPosts();
     }
 
-    private async Task OrderByHot(string hot = "hot")
+    private async Task OrderByHot(string hot = "HOT")
     {
         sortPosts = hot;
         
         await FilterBlogPosts();
     }
 
-    private async Task OrderByOld(string old = "old")
+    private async Task OrderByOld(string old = "OLD")
     {
         sortPosts = old;
         
@@ -605,12 +594,12 @@
                 blogpost.Bookmarks.Remove(loggedInUser.Id);
             }
             await postData.BookmarkBlogPost(blogpost.Id, loggedInUser.Id);
-            if (sortPosts == "top")
+            if (sortPosts == "TOP")
             {
                 blogposts = blogposts.OrderByDescending(b => b.Bookmarks.Count)
                             .ThenByDescending(b => b.DateCreated).ToList();
             }
-            if (sortPosts == "hot")
+            if (sortPosts == "HOT")
             {
                 blogposts = blogposts.OrderByDescending(b => b.Bookmarks.Count)
                            .ThenByDescending(b => b.DateCreated.AddDays(-7)).ToList();
