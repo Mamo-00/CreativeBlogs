@@ -1,0 +1,172 @@
+﻿@page "/Details/{id}"
+@inject AuthenticationStateProvider authProvider
+@inject IUserData userData
+@inject IBlogPostData blogpostData
+@inject NavigationManager navManager
+
+<div>
+    <div >
+        @if (blogpost is not null)
+        {
+            <div class="mx-auto">
+                <div id="TopRow" class="">
+                    <div id="FirstLayer" class="d-flex">
+                        <div class="float-start flex-grow-1">@blogpost.Author.DisplayName</div>
+                        <span class="ms-auto me-2 d-flex gap-1 align-items-center" @onclick="Bookmark">
+                            <div>@GetBookmarkText(blogpost)</div>
+
+                            @if (blogpost.Author.Id != loggedInUser?.Id)
+                            {
+                                if (blogpost.Bookmarks.Contains(loggedInUser?.Id))
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-fill pointer" viewBox="0 0 16 16">
+                                        <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z" />
+                                    </svg>
+                                }
+                                else
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark pointer" viewBox="0 0 16 16">
+                                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+                                    </svg>
+                                }
+
+                            }
+                            else
+                            {
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bookmark-x-fill" style="color: rgba(169,169,169,1);" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M2 15.5V2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.74.439L8 13.069l-5.26 2.87A.5.5 0 0 1 2 15.5zM6.854 5.146a.5.5 0 1 0-.708.708L7.293 7 6.146 8.146a.5.5 0 1 0 .708.708L8 7.707l1.146 1.147a.5.5 0 1 0 .708-.708L8.707 7l1.147-1.146a.5.5 0 0 0-.708-.708L8 6.293 6.854 5.146z" />
+                                </svg>
+                            }
+                        </span>
+                    </div>
+                    <div id="SecondLayer" class="d-flex justify-content-start">
+                        <div class="me-3">@blogpost.DateCreated.ToString("MM.dd.yyyy")</div>
+                        <div class="me-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" fill="currentColor" class="bi bi-circle-fill" viewBox="0 0 16 16">
+                                <circle cx="8" cy="8" r="8" />
+                            </svg>
+                        </div>
+                        <div>@ReadingTime(blogpost.Description)</div>
+                    </div>
+                </div>
+                <div id="content" class="">
+                    <div class="my-2 fw-bold">@blogpost.Title</div>
+                    <div id="Description" class=" my-2 lh-lg"><pre class="roboto-font text-break">@blogpost.Description</pre></div>
+                </div>
+                
+                <div id="BottomContent" class="d-flex justify-content-start mb-2">
+                    <span class="mx-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" id="bookmark" class="bi bi-tags" viewBox="0 0 16 16">
+                            <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z" />
+                            <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
+                        </svg>
+                    </span>
+                    <div>
+                        @blogpost.Tag.TagName
+                    </div>
+                </div>
+                
+                 <button class="btn mx-auto my-2 custom-button" @onclick="ClosePage"><span>Home</span></button>
+                
+            </div>
+        }
+        else
+        {
+            <div>Nothing to show, sorry</div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    private UserModel loggedInUser;
+    private BlogPostModel blogpost;
+
+    protected async override Task OnInitializedAsync()
+    {
+        blogpost = await blogpostData.GetBlogPost(Id);
+        loggedInUser = await authProvider.GetUserFromAuth(userData);
+    }
+
+
+    private string GetBookmarkText(BlogPostModel blogPost)
+    {
+        return blogPost.Bookmarks.Count.ToString("00");
+    }
+
+    private int GetWordCount(string text) 
+    {
+        int wordCount = 0;
+        int index = 0;
+        while (index < text.Length && char.IsWhiteSpace(text[index]))
+            index++;
+
+        while (index < text.Length)
+        {
+            // check if current char is part of a word
+            while (index < text.Length && !char.IsWhiteSpace(text[index]))
+                index++;
+
+            wordCount++;
+
+            // skip whitespace until next word
+            while (index < text.Length && char.IsWhiteSpace(text[index]))
+                index++;
+        }
+
+        return wordCount;
+    }
+
+    private string ReadingTime(string text) 
+    {
+        int wordCount = 0;
+        int timeToRead = 0;
+        string readingTime = "";
+
+        wordCount = GetWordCount(text);
+
+        timeToRead = wordCount / 250;
+
+        //TimeSpan time = TimeSpan.FromMinutes(timeToRead);
+        //string timeToString = time.ToString("mm");
+        if (timeToRead < 1.5)
+        {
+            readingTime = "1 minute";
+        }
+        else
+        {
+            readingTime = timeToRead.ToString() + " minutes";
+        }
+
+        return readingTime;
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private async Task Bookmark()
+    {
+        if (loggedInUser is not null)
+        {
+            if (blogpost.Author.Id == loggedInUser.Id)
+            {
+                //can't bookmark your own post
+                return;
+            }
+            if (blogpost.Bookmarks.Add(loggedInUser.Id) == false)
+            {
+                blogpost.Bookmarks.Remove(loggedInUser.Id);
+            }
+            await blogpostData.BookmarkBlogPost(blogpost.Id, loggedInUser.Id);
+            
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+    }
+}

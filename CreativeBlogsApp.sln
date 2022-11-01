@@ -3,7 +3,14 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreativeBlogs", "CreativeBlogs\CreativeBlogs.csproj", "{F7FD4681-F638-4F55-8E6C-D8BBC6928DF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreativeBlogs", "CreativeBlogs\CreativeBlogs.csproj", "{F7FD4681-F638-4F55-8E6C-D8BBC6928DF3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CreativeBlogsLibrary", "CreativeBlogsLibrary\CreativeBlogsLibrary.csproj", "{244E755C-91C8-4FCD-A160-F3773D4EC7B4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{404F9CE4-2187-47AE-BFC6-874BA90C19DD}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +22,10 @@ Global
 		{F7FD4681-F638-4F55-8E6C-D8BBC6928DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7FD4681-F638-4F55-8E6C-D8BBC6928DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7FD4681-F638-4F55-8E6C-D8BBC6928DF3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{244E755C-91C8-4FCD-A160-F3773D4EC7B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{244E755C-91C8-4FCD-A160-F3773D4EC7B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{244E755C-91C8-4FCD-A160-F3773D4EC7B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{244E755C-91C8-4FCD-A160-F3773D4EC7B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

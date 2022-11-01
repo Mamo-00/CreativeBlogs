@@ -1,0 +1,178 @@
+﻿@page "/Bookmarks"
+@attribute [Authorize]
+@inject AuthenticationStateProvider authProvider
+@inject IBlogPostData blogpostData
+@inject IUserData userData
+@inject NavigationManager navManager
+
+<div class="flex-nowrap bookmark-layout ">
+    <div class="left-side-width vertical-r mx-1 px-0 "></div>
+    <main class="mt-2 mx-2 ">
+        <div>
+            <div class="mx-auto">
+                <div class="align-items-center">
+                    <div class="d-flex justify-content-between">
+                        <h1 class="me-1">Your Bookmarks</h1>
+                        <div class="d-block d-md-none mx-auto my-auto">
+                            <div class="dropdown dp-style my-auto ">
+                                <button class="btn custom-button dropdown-toggle mx-auto w-auto" type="button" data-bs-toggle="dropdown" aria-expanded="false" id="sortOrder"><span class="px-1">Your Bookmarks</span></button>
+                                <ul class="dropdown-menu dropdown-menu-dark menu-bg" aria-labelledby="sortOrder">
+                                    <li><div class="dropdown-item text-black" @onclick="HomePage"><span>Home</span></div></li>
+                                    <li><div class="dropdown-item text-black" @onclick="YourPostsPage"><span>Your Posts</span></div></li>
+                                    <li><div class="dropdown-item text-black" @onclick="BookmarksPage"><span>Bookmarks</span></div></li>
+                                    <li><div class="dropdown-item text-black" @onclick="CreatePage"><span>Write</span></div></li>
+                                    <li><div class="dropdown-item text-black"><span><LoginDisplay /></span></div></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div>
+                @if (submissions?.Count > 0)
+                {
+                    @foreach (var b in submissions)
+                    {
+                        <div id="TheBigContainer" class=" my-5 overflow-auto">
+                            <hr />
+                            <div id="TopRowOfContainer" class="d-flex justify-content-start">
+                                <div class="me-2">@b?.Author.DisplayName</div>
+                                <div>@b?.DateCreated.ToString("MM.dd.yyyy")</div>
+                                <div class="ms-auto me-2">@GetBookmarkText(b)</div>
+                            </div>
+                            <hr />
+                            <div id="MiddleContent" @onclick="(() => OpenDetails(b))">
+
+                                <div id="Header" class="font-style text-break">@b.Title</div>
+                                <div id="Description" class="text-break">@GetSubstringDescription(b.Description)</div>
+                            </div>
+                            <div id="BottomContent" class="d-flex justify-content-lg-start">
+                                <span class="mx-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-tags" viewBox="0 0 16 16">
+                                        <path d="M3 2v4.586l7 7L14.586 9l-7-7H3zM2 2a1 1 0 0 1 1-1h4.586a1 1 0 0 1 .707.293l7 7a1 1 0 0 1 0 1.414l-4.586 4.586a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 2 6.586V2z" />
+                                        <path d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1v5.086z" />
+                                    </svg>
+                                </span>
+                                <div>
+                                    @b.Tag.TagName
+                                </div>
+                                <hr />
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+        </div>
+    </main>
+    <div id="sidebar" class="right-side-width vertical-l mx-1 px-0"></div>
+    <div class=" d-none d-md-block">
+        <div class="sidebar row shadow flex-column">
+            <button class="btn col-12 mx-auto my-4 custom-button" @onclick="HomePage"><span>Home</span></button>
+            <button class="btn col-12 mx-auto my-4 custom-button" @onclick="YourPostsPage"><span>Your Posts</span></button>
+            <button class="btn col-12 mx-auto my-4 custom-button" @onclick="BookmarksPage"><span>Bookmarks</span></button> 
+            <button class="btn col-12 mx-auto my-4 custom-button" @onclick="CreatePage"><span>Write</span></button>
+            <button class="btn col-12 mx-auto my-4 custom-button"><span><LoginDisplay /></span></button>
+        </div>
+    </div>
+</div>
+
+
+
+@code {
+    private UserModel loggedInUser;
+    private List<BlogPostModel> submissions;
+
+    protected async override Task OnInitializedAsync()
+    {
+        loggedInUser = await authProvider.GetUserFromAuth(userData);
+
+        var results = await blogpostData.GetAllBlogPosts();
+        results = results.Where(b => b.Bookmarks.Contains(loggedInUser?.Id)).ToList();
+
+        if (loggedInUser is not null && results is not null)
+        {
+            submissions = results.OrderByDescending(b => b.DateCreated).ToList();
+        }
+
+    }
+
+    private string GetSubstringDescription(string description)
+    {
+        if (description.Length > 200)
+        {
+            return description = description.Substring(0, 200).TrimEnd() + "...";
+        }
+        else
+        {
+            return description;
+        }
+    }
+
+    private void ClosePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private void CreatePage()
+    {
+        
+        if (loggedInUser is not null)
+        {
+            navManager.NavigateTo("/Create");
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+    }
+
+    private void OpenDetails(BlogPostModel blogPost)
+    {
+        
+        if (loggedInUser is not null)
+        {
+            navManager.NavigateTo($"/Details/{blogPost.Id}");
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+    }
+
+    private void HomePage()
+    {
+        navManager.NavigateTo("/");
+    }
+
+    private void YourPostsPage()
+    {
+        if (loggedInUser is not null)
+        {
+            navManager.NavigateTo("/Posts");
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+
+    }
+
+    private void BookmarksPage()
+    {
+        if (loggedInUser is not null)
+        {
+            navManager.NavigateTo("/Bookmarks");
+        }
+        else
+        {
+            navManager.NavigateTo("/MicrosoftIdentity/Account/SignIn", true);
+        }
+
+    }
+
+    private string GetBookmarkText(BlogPostModel blogPost)
+    {
+        return blogPost.Bookmarks.Count.ToString("00");
+    }
+}
