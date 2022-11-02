@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.ConfigureServices();
 
 var app = builder.Build();
+app.UsePathBase("/CreativeBlogs");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
